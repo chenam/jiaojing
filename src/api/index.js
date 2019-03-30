@@ -39,6 +39,10 @@ export default{
     //通行证
     permitsInfo(param,id,callbak){
         return http.get(`${baseUrl}/v1.0/management/permits/${id}/info`, param, callbak)
+    },
+    //关卡
+    gateNames(param,callbak){
+        return http.get(`${baseUrl}/v1.0/management/gate/names`, param, callbak)
     }
 }
 

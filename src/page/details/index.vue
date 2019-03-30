@@ -110,7 +110,7 @@
                         </div>
                         <div class="grid-body">
                             <div class="detailsForm">
-                                <el-form ref="form" :model="form" label-width="90px">
+                                <el-form ref="form" :model="form" label-width="100px">
                                    <el-form-item label="审批状态">
                                         <el-select v-model="form.state" placeholder="未处理">
                                             <el-option label="未处理" value=""></el-option>
@@ -142,12 +142,25 @@
                                             placeholder="选择日期时间">
                                         </el-date-picker>
                                     </el-form-item>
-                                    <el-form-item label="限制时间">
-                                        <el-select v-model="form.limit_time" placeholder="夏季">
+                                    <el-form-item label="允许进入关口">
+                                        <el-select v-model="form.gates" multiple placeholder="">
+                                            <el-option 
+                                                v-for="(item, index) in gateNames" 
+                                                :key="index" 
+                                                :label="item" 
+                                                :value="item">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="高峰时间">
+                                        <el-select v-model="form.peak_time" placeholder="夏季">
                                             <el-option label="无" value=""></el-option>
                                             <el-option label="夏季" value="7:00-8:30,11:30-12:30,18:00-20:00"></el-option>
                                             <el-option label="冬季" value="7:00-8:30,11:30-12:30,17:30-19:30"></el-option>
                                         </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="限制时间">
+                                        <el-input v-model="form.limit_time" placeholder="请输入自定义时间段" clearable></el-input>
                                     </el-form-item>
                                     <el-form-item label="途径路线">
                                         <el-input type="textarea" v-model="form.desc"></el-input>
@@ -180,7 +193,9 @@ export default {
                 start_time: '',
                 end_time: '',
                 desc: '',
-                limit_time:'7:00-8:30,11:30-12:30,18:00-20:00',
+                peak_time:'7:00-8:30,11:30-12:30,18:00-20:00',
+                gates:'',
+                limit_time:'',
             },
             options: [],
             urls:[],
@@ -188,6 +203,7 @@ export default {
             baseUrl: process.env.API_URL ? process.env.API_URL : '',
             breadcrumbitem:'通行证审批',
             loading: true,
+            gateNames:[],
         };
     },
     props: {
@@ -201,7 +217,9 @@ export default {
                 approval_opinion: this.form.remarks,
                 start_time: new Date(this.form.start_time).valueOf(),
                 end_time: new Date(this.form.end_time).valueOf(),
-                limit_time: this.form.limit_time,
+                gate: this.form.gates,
+                peak_time: this.form.peak_time,
+                limit_time: this.limit_time,
             }
             if(this.form.state !== ""){
                 debugger
@@ -291,6 +309,16 @@ export default {
         .then((response) =>{
             if(response && response.status === 200){
                 this.options = response.data;
+            }else{
+
+            }            
+        })
+        .catch(function (error) {
+        });
+        Api.gateNames(params)
+        .then((response) =>{
+            if(response && response.status === 200){
+                this.gateNames = response.data;
             }else{
 
             }            
