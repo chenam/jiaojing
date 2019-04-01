@@ -6,6 +6,7 @@ import Export from '@/page/export'
 import Login from '@/page/login'
 import Detail from '@/page/details'
 import Permit from '@/page/permit'
+import User from '@/page/User'
 import ResetPassword from '@/page/resetPassword'
 
 Vue.use(Router)
@@ -44,6 +45,16 @@ const router =  new Router({
 			name: '审批日志',
 			icon: 'iconshenpitongguo',
 			component: Examed,
+			meta: { 
+				requireAuth: true,
+			},
+		},
+		{
+			path: '/user',
+			name: '平台管理',
+			icon: 'iconpingtai_pingtaiyonghu',
+			component: User,
+			hidden: true,
 			meta: { 
 				requireAuth: true,
 			},

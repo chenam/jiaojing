@@ -138,6 +138,8 @@ export default {
 							this.$store.dispatch('setToken', _user)
 							this.$store.dispatch('setUser', _user)
 							this.$store.dispatch('setIsRem',_remember_me)
+							this.$store.dispatch('setAuthorties',response.data.authorities)
+							// this.$store.dispatch('setAuthorties',[])
 							this.$router.push({path: "/unexam"});
 							if(localStorage.getItem('uid') !== null){
 								localStorage.removeItem('uid');

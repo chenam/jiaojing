@@ -23,7 +23,7 @@
                             <span v-show='!isCollapse'>安阳交警管理平台</span>
                             <span v-show='isCollapse'>交警</span>
                         </div>
-						<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
+						<template v-for="(item,index) in routesData" v-if="!item.hidden">
 							<el-submenu :index="index+''" :key="index" v-if="item.isPull">
 								<template slot="title"><i :class="item.iconCls + ' iconfont'"></i>{{item.name}}</template>
 								<el-menu-item v-for="child in item.children" :index="item.path + '/' + child.path" v-if="!child.hidden"  :key="child.name">{{child.name}}</el-menu-item>
@@ -101,6 +101,7 @@ export default {
             path: 'default',
             isCollapse: false,
 			logoImg: logoImg,
+			routesData: []
 			// userName: ''
         }
 	},
@@ -109,10 +110,13 @@ export default {
 			return this.$store.state.userName
 		}
 	},
+	created(){
+		
+
+	},
 	updated : function(){
 		/* 判断显示的组件 */
 		let path = this.$route.path;
-		console.log(path,'path')
 		if(path === '/login' || path === '/'){
 			this.path = 'login';
 		}else if(path === '/permit'){
@@ -124,6 +128,20 @@ export default {
 		}
 	},
     mounted () {
+		this.routesData = this.$router.options.routes;
+		// 判断是否有管理员权限
+		let  authList = this.$store.state.authorities;
+		let isAdmin = false ;
+		if(authList.indexOf('ADMIN') > -1){
+			isAdmin = true;
+		}
+		// 管理员权限的有平台管理
+		this.routesData.forEach(v => {
+			if(isAdmin && v.path === '/user'){
+				v.hidden = false;
+			}
+		})
+
         const openeds = [];
         for (let i = 0; i < this.$router.options.routes.length; i++) {
             if (this.$route.path.indexOf(this.$router.options.routes[i].path) > -1) {

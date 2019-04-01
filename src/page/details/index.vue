@@ -280,7 +280,7 @@ export default {
                                 let _arr = [];
                                 val.value.forEach((v, i) => {
                                     
-                                    _arr.push(typeof(v) === 'object' ? Util.format(v,'hh:mm') : v)
+                                    _arr.push(typeof(v) === 'object' ? Util.format(v,'hh:mm:ss') : v)
                                 })
                                 _limit_time.push(_arr.join('-'))
                             }

@@ -59,7 +59,6 @@ service.interceptors.response.use(function(response){
     //     localDb.set('TOKEN',response['headers']['x-auth-token'])
     // }
   
-    console.log(response)
         return response
     },function(error){
         console.log('err',error)

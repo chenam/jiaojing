@@ -8,6 +8,7 @@ const store = new Vuex.Store({
         token: localDb.get('TOKEN',localDb.get('isRem')),
         userName: localDb.get('userName'),
         isRem: localDb.get('isRem'),
+        authorities: localDb.get('authorities'),
         NewMsg:{
             Msgs:[
                 {
@@ -49,6 +50,10 @@ const store = new Vuex.Store({
         SETISREM (state, payload ){
             localDb.set('isRem',payload)
             state.isRem = payload;
+        },
+        SETAUTHORTIES (state, payload ){
+            localDb.set('authorities',payload)
+            state.authorities = payload;
         }
     },
     actions:{
@@ -60,6 +65,9 @@ const store = new Vuex.Store({
         },
         setIsRem(context, payload ){
             context.commit( 'SETISREM', payload );
+        },
+        setAuthorties(context, payload ){
+            context.commit( 'SETAUTHORTIES', payload );
         },
         fetchMsg (context){
             // $.ajax({
