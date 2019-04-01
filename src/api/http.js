@@ -79,7 +79,7 @@ service.interceptors.response.use(function(response){
                     query: {redirect: router.currentRoute.fullPath}
                 })
             // 无权限
-            }else if(rror.response.status === 403){
+            }else if(error.response.status === 403){
                 Message({
                     message:'权限错误！',
                     type:'error',

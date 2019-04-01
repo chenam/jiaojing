@@ -10,7 +10,7 @@
         </div>
         <div class="main">
             <el-row v-loading="loading">
-                <el-col :span=" state == 'APPLYING'?16:24">
+                <el-col :span=" state == 'APPLYING'?16:24" :class="state == 'APPLYING' ? 'grid-left': '' ">
                     <div class="grid-content bg-purple">
                         <div class="grid-header">
                             <h3 class="title">通行证申请详情</h3>
@@ -103,23 +103,23 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="7" style="float:right;width:31.66667%;" v-if="state == 'APPLYING'">
+                <el-col :span="7" style="float:right;width:400px;" v-if="state == 'APPLYING'">
                     <div class="grid-content bg-purple-light">
                         <div class="grid-header">
                             <h3 class="title">处理通行证申请</h3>
                         </div>
                         <div class="grid-body">
                             <div class="detailsForm">
-                                <el-form ref="form" :model="form" label-width="100px">
-                                   <el-form-item label="审批状态">
-                                        <el-select v-model="form.state" placeholder="未处理">
+                                <el-form ref="form" :model="form" label-width="110px"  :rules=formRule>
+                                   <el-form-item label="审批状态" prop="state">
+                                        <el-select v-model="form.state" placeholder="未处理" class="w220">
                                             <el-option label="未处理" value=""></el-option>
                                             <el-option label="通过" value="ACCEPTED"></el-option>
                                             <el-option label="未通过" value="REFUSED"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="审批备注">
-                                        <el-select v-model="form.remarks" placeholder="无">
+                                    <el-form-item label="审批备注" prop="remarks">
+                                        <el-select v-model="form.remarks" placeholder="无"  class="w220">
                                             <el-option 
                                                 v-for="(item, index) in options" 
                                                 :key="index" 
@@ -128,22 +128,30 @@
                                             </el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="途经时间起">
+                                    <el-form-item label="途经时间起" prop="start_time">
                                         <el-date-picker
+                                            class="w220"
                                             v-model="form.start_time"
                                             type="datetime"
                                             placeholder="选择日期时间">
                                         </el-date-picker>
                                     </el-form-item>
-                                    <el-form-item label="途经时间止">
+                                    <el-form-item label="途经时间止" prop="end_time">
                                         <el-date-picker
+                                            class="w220"
                                             v-model="form.end_time"
                                             type="datetime"
                                             placeholder="选择日期时间">
                                         </el-date-picker>
                                     </el-form-item>
-                                    <el-form-item label="允许进入关口">
-                                        <el-select v-model="form.gates" multiple placeholder="">
+                                    <el-form-item label="允许进入关口" prop="gates">
+                                        <el-select 
+                                            v-model="form.gates" 
+                                            multiple 
+                                            placeholder="请选择"
+                                            clearable
+                                            class="w220"
+                                        >
                                             <el-option 
                                                 v-for="(item, index) in gateNames" 
                                                 :key="index" 
@@ -153,14 +161,42 @@
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item label="高峰时间">
-                                        <el-select v-model="form.peak_time" placeholder="夏季">
+                                        <el-select v-model="form.peak_time" placeholder="夏季"  class="w220">
                                             <el-option label="无" value=""></el-option>
                                             <el-option label="夏季" value="7:00-8:30,11:30-12:30,18:00-20:00"></el-option>
                                             <el-option label="冬季" value="7:00-8:30,11:30-12:30,17:30-19:30"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item label="限制时间">
-                                        <el-input v-model="form.limit_time" placeholder="请输入自定义时间段" clearable></el-input>
+                                        <!-- <el-input v-model="form.limit_time" placeholder="请输入自定义时间段" clearable></el-input> -->
+                                        <template v-for="(item,index) in form.limit_time">
+                                            <el-time-picker
+                                                is-range
+                                                :key="index + '1'"
+                                                v-model="form.limit_time[index].value"
+                                                range-separator="至"
+                                                start-placeholder="开始时间"
+                                                end-placeholder="结束时间"
+                                                clearable
+                                                class="detail-time-range"
+                                                placeholder="选择时间范围"
+                                                value-format='HH:mm:ss'
+
+                                            >
+                                            </el-time-picker>
+                                            <span
+                                                :key="index + '2'"
+                                                class="el-icon-remove-outline delete-icon" 
+                                                @click="deleteLimitTime(item, index)"
+                                                v-if='form.limit_time.length > 1'
+                                            ></span>
+                                        </template>
+                                        <div>
+                                            <span
+                                                class="el-icon-circle-plus-outline add-icon" 
+                                                @click="addLimitTime"
+                                            ></span>
+                                        </div>
                                     </el-form-item>
                                     <el-form-item label="途径路线">
                                         <el-input type="textarea" v-model="form.desc"></el-input>
@@ -180,6 +216,7 @@
 
 <script>
 import Api  from '../../api/index.js';
+import Util from '../../util/util.js'
 import { mapState } from "vuex";
 export default {
     name: "details",
@@ -195,7 +232,28 @@ export default {
                 desc: '',
                 peak_time:'7:00-8:30,11:30-12:30,18:00-20:00',
                 gates:'',
-                limit_time:'',
+                limit_time:[{
+                    // value: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)]
+                    value: ''
+                }],
+            },
+            formRule: {
+                state: [
+                    // { required: true, message: '请输入活动名称', trigger: 'blur' },
+                ],
+                remarks: [
+                    // { required: true, message: '请选择活动区域', trigger: 'change' }
+                ],
+                start_time: [
+                    // { type: 'date', required: true, message: '请选择开始时间', trigger: 'change' }
+                ],
+                end_time: [
+                    // { type: 'date', required: true, message: '请选择结束时间', trigger: 'change' }
+                ],
+                gates: [
+                    // { required: true, message: '请选择允许进入关口', trigger: 'change' }
+                ],
+                
             },
             options: [],
             urls:[],
@@ -211,27 +269,51 @@ export default {
     },
     methods: {
         onSubmit(){
-            let params = {
-                state: this.form.state,
-                route: this.form.desc,
-                approval_opinion: this.form.remarks,
-                start_time: new Date(this.form.start_time).valueOf(),
-                end_time: new Date(this.form.end_time).valueOf(),
-                gate: this.form.gates,
-                peak_time: this.form.peak_time,
-                limit_time: this.limit_time,
-            }
-            if(this.form.state !== ""){
-                debugger
-                Api.approvalPermits(params,this.$route.query.id)
-                .then((response) =>{
-                    if(response && response.status === 200){
-                        this.$router.push({path: "/unexam"});
-                    }else{
+            
+            
+            if(this.state !== ""){
+                this.$refs['form'].validate((valid) => {
+                    if (valid) {
+                        let _limit_time = [];
+                        this.form.limit_time.forEach((val, ind) => {
+                            if(val.value){
+                                let _arr = [];
+                                val.value.forEach((v, i) => {
+                                    
+                                    _arr.push(typeof(v) === 'object' ? Util.format(v,'hh:mm') : v)
+                                })
+                                _limit_time.push(_arr.join('-'))
+                            }
+                            
+                        })
+                        
+                        let params = {
+                            state: this.state,
+                            route: this.form.desc,
+                            approval_opinion: this.form.remarks,
+                            start_time: new Date(this.form.start_time).valueOf(),
+                            end_time: new Date(this.form.end_time).valueOf(),
+                            gate: this.form.gates.join(','),
+                            peak_time: this.form.peak_time,
+                            limit_time: _limit_time.join(','),
+                        }
+                        console.log(params,'params')
+                        Api.approvalPermits(params,this.$route.query.id)
+                        .then((response) =>{
+                            if(response && response.status === 200){
+                                this.$router.push({path: "/unexam"});
+                            }else{
 
-                    }            
-                })
-                .catch(function (error) {
+                            }            
+                        })
+                        .catch(function (error) {
+                        });
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                
+                
                 });
             }else{
                 this.$router.push({path: "/unexam"});
@@ -251,6 +333,16 @@ export default {
                 .catch(function (error) {
                 });
             }
+        },
+        // 添加限制时间
+        addLimitTime(){
+            this.form.limit_time.push({
+                value: ''
+            })
+        },
+        // 减少限制时间
+        deleteLimitTime(item,index){
+            this.form.limit_time.splice(index);
         },
         //审批意见合集
         approvalState(state) {
@@ -336,6 +428,7 @@ export default {
                 this.form.start_time = this.tableData.start_time;
                 this.form.end_time = this.tableData.end_time;
                 this.form.desc = this.tableData.route;
+                console.log(this.form,'ddd')
                 this.loading = false;
                 // this.imgUrl(this.tableData.photo_car_path1);
                 // this.imgUrl(this.tableData.photo_vehicle_license_path1);
@@ -355,6 +448,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='less' scoped>
+.w220{
+    width: 230px;
+}
+.grid-left{
+    width: calc(~'100% - 400px');
+}
 .main{
     padding: 15px;
 }
@@ -384,4 +483,22 @@ export default {
 .el-table td img{
     max-width: 100%;
 }
+.add-icon,.delete-icon{
+    font-size: 18px;
+    cursor: pointer;
+    &:hover{
+        color: #409EFF;
+    }
+}
 </style>
+<style lang='less'> 
+.detail-time-range.el-input__inner{
+        width: calc(~'100% - 40px');
+        margin-bottom: 15px;
+        .el-range-separator{
+            width: 20px;
+        }
+}
+
+</style>
+
