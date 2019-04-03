@@ -34,6 +34,10 @@
                                         <th><div class="cell">运输物品</div></th>
                                         <td><div class="cell">{{ tableData.goods }}</div></td>
                                     </tr>
+                                    <tr v-if="tableData.gate">
+                                        <th><div class="cell">城市入口</div></th>
+                                        <td><div class="cell">{{ tableData.gate }}</div></td>
+                                    </tr>
                                     <tr>
                                         <th><div class="cell">途经时间起</div></th>
                                         <td><div class="cell">{{ tableData.start_time | date-format }}</div></td>
@@ -42,8 +46,12 @@
                                         <th><div class="cell">途经时间止</div></th>
                                         <td><div class="cell">{{ tableData.end_time | date-format }}</div></td>
                                     </tr>
-                                    <tr>
-                                        <th><div class="cell">高峰禁行</div></th>
+                                    <tr v-if="tableData.peak_hour">
+                                        <th><div class="cell">高峰时间</div></th>
+                                        <td><div class="cell">{{ tableData.peak_hour }}</div></td>
+                                    </tr>
+                                    <tr v-if="tableData.limit_time">
+                                        <th><div class="cell">限制时间</div></th>
                                         <td><div class="cell">{{ tableData.limit_time }}</div></td>
                                     </tr>
                                     <tr>

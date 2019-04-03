@@ -1,6 +1,6 @@
 <!-- 
     author:amin,
-    desc:审批
+    desc:平台管理
  -->
 <template>
     <div  v-loading="loading" element-loading-text="删除中">
@@ -8,13 +8,13 @@
             <h3 class="title">平台管理</h3>
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item>首页</el-breadcrumb-item>
-                <el-breadcrumb-item>审批日志</el-breadcrumb-item>
+                <el-breadcrumb-item>平台管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
 
         <div class="examed">
              <el-form :inline="true" :model="examedForm" class="demo-form-inline" empty-text="暂无数据" :rules='examedFormRule' ref='examedForm'>
-                <el-form-item label="车牌号码：" prop='plateNumber'>
+                <el-form-item label="用户名：" prop='plateNumber'>
                     <el-input v-model="examedForm.plateNumber" placeholder="请输入" clearable></el-input>
                 </el-form-item>
                 

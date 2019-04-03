@@ -66,6 +66,22 @@
                                         <th width="30%"><div class="cell">驾驶人驾驶证号</div></th>
                                         <td><div class="cell">{{ tableData.driving_license }}</div></td>
                                     </tr>
+                                    <tr v-if='tableData.gate'>
+                                        <th width="30%"><div class="cell">允许进入卡口</div></th>
+                                        <td><div class="cell">{{ tableData.gate }}</div></td>
+                                    </tr>
+                                    <tr v-if='tableData.peak_hour'>
+                                        <th width="30%"><div class="cell">高峰时间</div></th>
+                                        <td><div class="cell">{{ tableData.peak_hour }}</div></td>
+                                    </tr>
+                                    <tr v-if='tableData.limit_time'>
+                                        <th width="30%"><div class="cell">限制时间</div></th>
+                                        <td><div class="cell">{{ tableData.limit_time }}</div></td>
+                                    </tr>
+                                    <tr>
+                                        <th width="30%"><div class="cell">驾驶人驾驶证号</div></th>
+                                        <td><div class="cell">{{ tableData.driving_license }}</div></td>
+                                    </tr>
                                     <tr>
                                         <th width="30%"><div class="cell">途经时间起</div></th>
                                         <td><div class="cell">{{ tableData.start_time | date-format }}</div></td>
@@ -110,7 +126,7 @@
                         </div>
                         <div class="grid-body">
                             <div class="detailsForm">
-                                <el-form ref="form" :model="form" label-width="110px"  :rules=formRule>
+                                <el-form ref="form" :model="form" label-width="100px"  :rules=formRule>
                                    <el-form-item label="审批状态" prop="state">
                                         <el-select v-model="form.state" placeholder="未处理" class="w220">
                                             <el-option label="未处理" value=""></el-option>
@@ -144,7 +160,7 @@
                                             placeholder="选择日期时间">
                                         </el-date-picker>
                                     </el-form-item>
-                                    <el-form-item label="允许进入关口" prop="gates">
+                                    <el-form-item label="允许进入卡口" prop="gates">
                                         <el-select 
                                             v-model="form.gates" 
                                             multiple 
@@ -163,8 +179,8 @@
                                     <el-form-item label="高峰时间">
                                         <el-select v-model="form.peak_time" placeholder="夏季"  class="w220">
                                             <el-option label="无" value=""></el-option>
-                                            <el-option label="夏季" value="7:00-8:30,11:30-12:30,18:00-20:00"></el-option>
-                                            <el-option label="冬季" value="7:00-8:30,11:30-12:30,17:30-19:30"></el-option>
+                                            <el-option label="夏季（7:00-8:30,11:30-12:30,18:00-20:00）" value="7:00-8:30,11:30-12:30,18:00-20:00"></el-option>
+                                            <el-option label="冬季（7:00-8:30,11:30-12:30,17:30-19:30）" value="7:00-8:30,11:30-12:30,17:30-19:30"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item label="限制时间">
@@ -178,10 +194,10 @@
                                                 start-placeholder="开始时间"
                                                 end-placeholder="结束时间"
                                                 clearable
-                                                class="detail-time-range"
+                                                class="detail-time-range w220"
                                                 placeholder="选择时间范围"
-                                                value-format='HH:mm:ss'
-
+                                                default-value= default_limit_time
+                                                editable
                                             >
                                             </el-time-picker>
                                             <span
@@ -199,7 +215,7 @@
                                         </div>
                                     </el-form-item>
                                     <el-form-item label="途径路线">
-                                        <el-input type="textarea" v-model="form.desc"></el-input>
+                                        <el-input type="textarea" v-model="form.desc" ></el-input>
                                     </el-form-item>
                                     <el-form-item>
                                         <el-button type="primary" @click="onSubmit">确定</el-button>
@@ -236,6 +252,7 @@ export default {
                     // value: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)]
                     value: ''
                 }],
+                default_limit_time: [new Date(2019, 4, 1, 0, 0), new Date(2019, 4, 2, 1, 0)]
             },
             formRule: {
                 state: [
@@ -271,7 +288,7 @@ export default {
         onSubmit(){
             
             
-            if(this.state !== ""){
+            if(this.form.state !== ""){
                 this.$refs['form'].validate((valid) => {
                     if (valid) {
                         let _limit_time = [];
@@ -288,16 +305,16 @@ export default {
                         })
                         
                         let params = {
-                            state: this.state,
+                            state: this.form.state,
                             route: this.form.desc,
                             approval_opinion: this.form.remarks,
                             start_time: new Date(this.form.start_time).valueOf(),
                             end_time: new Date(this.form.end_time).valueOf(),
                             gate: this.form.gates.join(','),
-                            peak_time: this.form.peak_time,
+                            peak_hour: this.form.peak_time,
                             limit_time: _limit_time.join(','),
                         }
-                        console.log(params,'params')
+                        // console.log(params,'params')
                         Api.approvalPermits(params,this.$route.query.id)
                         .then((response) =>{
                             if(response && response.status === 200){
@@ -411,6 +428,7 @@ export default {
         .then((response) =>{
             if(response && response.status === 200){
                 this.gateNames = response.data;
+                this.form.gates = response.data;
             }else{
 
             }            
@@ -448,9 +466,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='less' scoped>
-.w220{
-    width: 230px;
-}
+
 .grid-left{
     width: calc(~'100% - 400px');
 }
@@ -492,6 +508,12 @@ export default {
 }
 </style>
 <style lang='less'> 
+.grid-body{
+    div.w220{
+        width: 230px!important;
+    }
+}
+
 .detail-time-range.el-input__inner{
         width: calc(~'100% - 40px');
         margin-bottom: 15px;
