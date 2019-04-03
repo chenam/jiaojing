@@ -149,6 +149,7 @@
                                             class="w220"
                                             v-model="form.start_time"
                                             type="datetime"
+                                            align='right'
                                             placeholder="选择日期时间">
                                         </el-date-picker>
                                     </el-form-item>
@@ -157,6 +158,7 @@
                                             class="w220"
                                             v-model="form.end_time"
                                             type="datetime"
+                                            align='right'
                                             placeholder="选择日期时间">
                                         </el-date-picker>
                                     </el-form-item>
@@ -194,9 +196,10 @@
                                                 start-placeholder="开始时间"
                                                 end-placeholder="结束时间"
                                                 clearable
+                                                align='right'
                                                 class="detail-time-range w220"
                                                 placeholder="选择时间范围"
-                                                default-value= default_limit_time
+                                                :default-value= default_limit_time
                                                 editable
                                             >
                                             </el-time-picker>
@@ -252,7 +255,8 @@ export default {
                     // value: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)]
                     value: ''
                 }],
-                default_limit_time: [new Date(2019, 4, 1, 0, 0), new Date(2019, 4, 2, 1, 0)]
+                
+                // default_limit_time: [ new Date(0, 0), new Date(0, 0)]
             },
             formRule: {
                 state: [
@@ -279,6 +283,7 @@ export default {
             breadcrumbitem:'通行证审批',
             loading: true,
             gateNames:[],
+            default_limit_time: [new Date(2019, 4, 3, 0, 0), new Date(2019, 4, 3, 23, 0)]
         };
     },
     props: {
