@@ -43,7 +43,23 @@ export default{
     //关卡
     gateNames(param,callbak){
         return http.get(`${baseUrl}/v1.0/management/gate/names`, param, callbak)
-    }
+    },
+    //用户列表
+    accountLists(param,callbak){
+        return http.get(`${baseUrl}/v1.0/auth/account`, param, callbak)
+    },
+    //注册用户
+    register(param,callbak){
+        return http.post(`${baseUrl}/v1.0/auth/register`, param, callbak)
+    },
+    //修改用户权限
+    editAccount(param,callbak){
+        return http.put(`${baseUrl}/v1.0/auth/account`, param, callbak)
+    },
+    //删除用户
+    deleteAccount(param,username,callbak){
+        return http.delete(`${baseUrl}/v1.0/auth/account/${username}`, param, callbak)
+    },
 }
 
 

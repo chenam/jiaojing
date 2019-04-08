@@ -54,7 +54,6 @@ const router =  new Router({
 			name: '平台管理',
 			icon: 'iconpingtai_pingtaiyonghu',
 			component: User,
-			hidden: true,
 			meta: { 
 				requireAuth: true,
 			},
