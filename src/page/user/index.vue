@@ -91,7 +91,7 @@
                     prop="username"
                     v-if="isRegister">
                     <el-input
-                        v-model="form.name" 
+                        v-model="form.username" 
                         class="w220"
                         placeholder="请输入"></el-input>
                 </el-form-item>
@@ -221,15 +221,15 @@ export default {
     data(){
         // 校验用户名
 		let verifyUserName = function(rule, value, callback){
-				let val = value;
-				if(!val){
-					callback('请输入用户名');
-				}else if(!/^[a-zA-Z0-9_\u4e00-\u9fa5]{2,20}$/.test(val)){
-					// callback('用户名仅支持2-20位中英文、数字和下划线  ');
-					callback()
-				}else{
-					callback();
-				}
+            let val = value;
+            if(!val){
+                callback('请输入用户名');
+            }else if(!/^[a-zA-Z0-9_\u4e00-\u9fa5]{2,20}$/.test(val)){
+                // callback('用户名仅支持2-20位中英文、数字和下划线  ');
+                callback()
+            }else{
+                callback();
+            }
 		};
 		// 校验密码
 		let verifyPassWord = function(rule, value, callback){
@@ -251,7 +251,7 @@ export default {
             userNum: 5,
             dialogFormVisible: false,
             form: {
-                name: '',
+                username: '',
                 password: '',
                 region:['PERMIT_LIST','PERMIT_AGREE','PERMIT_REFUSE','PERMIT_DELETE'],
             },
@@ -310,7 +310,7 @@ export default {
         //删除用户
         handleDelete(index,row){
             let self = this;
-            this.form.name = this.tableData[index].name;
+            this.form.username = this.tableData[index].name;
             // 点击删除确定
             this.$confirm('是否删除该用户?', '提示', {
                 confirmButtonText: '确定',
@@ -319,7 +319,7 @@ export default {
             }).then(() => {
                 self.loading = true;
                 let params = {}
-                Api.deleteAccount(params,this.form.name).then((response) =>{    
+                Api.deleteAccount(params,this.form.username).then((response) =>{    
                     if(response && response.status === 200){
                         self.loading = false;
                         this.getListData();
@@ -341,7 +341,8 @@ export default {
         },
         //点击创建用户按钮
         addAccount(){
-            this.form.name = "";
+            this.form.username = "";
+            this.form.password = "";
             this.dialogFormVisible = true;
             this.isRegister = true;
         },
@@ -350,15 +351,16 @@ export default {
             this.$refs.loginForm.validate((valid) =>{
                 if(valid){
                     Api.register({
-                        username: this.form.name.trim(),
+                        username: this.form.username.trim(),
                         password: this.form.password.trim(),
                         permissions: this.form.region,
                     }).then((response) =>{
                             
-                        if(response && response.status === 200){
+                        if(response && response.status === 201){
                             this.getListData();
                             this.isRegister = false;
                             this.dialogFormVisible = false;
+                            console.log(this.dialogFormVisible)
                         }
                     })
                     .catch(function (error) {
@@ -375,7 +377,7 @@ export default {
             this.dialogFormVisible = true;
             this.isEdit = true;
             this.title = "修改用户权限";
-            this.form.name = this.tableData[index].name;
+            this.form.username = this.tableData[index].name;
             let _roles = [];
             let i = this.tableData[index].role;
             if(i.permit_list == "1"){
@@ -395,7 +397,7 @@ export default {
         //修改用户权限
         onSubmit (){
             Api.editAccount({
-                username: this.form.name,
+                username: this.form.username,
                 permissions: this.form.region,
             }).then((response) =>{
                     
