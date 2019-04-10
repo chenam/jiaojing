@@ -188,29 +188,7 @@
 import Api  from '../../api/index.js';
 export default {
     created : function(){
-        let self = this;
-        // 判断当前角色
-        // ajax({
-        //     url:'/user/getInitInfo',
-        //     type:'post',
-        //     data:{
-        //     },
-        //     success(res){
-        //         if(res.success){
-        //             // self.isProfessor = res.data.userVO.isProfessor;
-        //             self.orgCodeShow = res.data.userVO.isProfessor;
-        //             self.belongOrg = res.data.userVO.orgCode;
-        //         }else{
-        //             self.$message({
-        //                 message: res.errorMsg,
-        //                 type: 'warning'
-        //             });
-        //         };
-        //     }
-            
-        // });
-        // 获取机构列表
-        // this.getOrg();
+        
     },
     mounted : function(){
         this.getListData();
@@ -288,9 +266,17 @@ export default {
                 page: this.pageStart,
                 size: this.pageSize,
             }).then((response) =>{
-                    
                 if(response && response.status === 200){
                     this.tableData = response.data;
+                }
+            })
+            .catch(function (error) {
+
+            });
+
+            Api.quota().then((response) =>{
+                if(response && response.status === 200){
+                    this.userNum = response.data.total - response.data.use;
                 }
             })
             .catch(function (error) {
@@ -318,8 +304,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 self.loading = true;
-                let params = {}
-                Api.deleteAccount(params,this.form.username).then((response) =>{    
+                Api.deleteAccount(this.form.username).then((response) =>{    
                     if(response && response.status === 200){
                         self.loading = false;
                         this.getListData();
@@ -341,10 +326,18 @@ export default {
         },
         //点击创建用户按钮
         addAccount(){
-            this.form.username = "";
-            this.form.password = "";
-            this.dialogFormVisible = true;
-            this.isRegister = true;
+            if(this.userNum == 0){
+                this.$message({
+                    message: '您已经达到创建用户数的极限',
+                    type: 'warning'
+                });
+            }else{
+                this.form.username = "";
+                this.form.password = "";
+                this.form.region = ['PERMIT_LIST','PERMIT_AGREE','PERMIT_REFUSE','PERMIT_DELETE'];
+                this.dialogFormVisible = true;
+                this.isRegister = true;
+            }
         },
         //注册用户
         onRegister(){
@@ -355,12 +348,10 @@ export default {
                         password: this.form.password.trim(),
                         permissions: this.form.region,
                     }).then((response) =>{
-                            
                         if(response && response.status === 201){
                             this.getListData();
                             this.isRegister = false;
                             this.dialogFormVisible = false;
-                            console.log(this.dialogFormVisible)
                         }
                     })
                     .catch(function (error) {
@@ -400,7 +391,6 @@ export default {
                 username: this.form.username,
                 permissions: this.form.region,
             }).then((response) =>{
-                    
                 if(response && response.status === 200){
                     this.getListData();
                     this.isEdit = false;
@@ -412,6 +402,11 @@ export default {
                 this.dialogFormVisible = false;
             });
         },
+    },
+    computed: {
+        authorities(){
+            return this.$store.state.authorities
+        }
     }
 }
 </script>

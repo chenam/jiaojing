@@ -57,8 +57,32 @@ export default{
         return http.put(`${baseUrl}/v1.0/auth/account`, param, callbak)
     },
     //删除用户
-    deleteAccount(param,username,callbak){
-        return http.delete(`${baseUrl}/v1.0/auth/account/${username}`, param, callbak)
+    deleteAccount(username,callbak){
+        return http.delete(`${baseUrl}/v1.0/auth/account/${username}`, callbak)
+    },
+    //查询账号配额
+    quota(param,callbak){
+        return http.get(`${baseUrl}/v1.0/auth/account/quota`, param, callbak)
+    },
+    //删除通行证
+    deletePermits(id,callbak) {
+        return http.delete(`${baseUrl}/v1.0/management/permits/${id}`, callbak)
+    },
+    //查看开闸记录
+    passLog(param,callbak){
+        return http.get(`${baseUrl}/v1.0/management/gate/pass-log`, param, callbak)
+    },
+    //查看卡口状态
+    gateStatus(param,callbak){
+        return http.get(`${baseUrl}/v1.0/management/gate/status`, param, callbak)
+    },
+    //关闭卡口
+    gateClose(param,callbak){
+        return http.post(`${baseUrl}/v1.0/management/gate/gate-close`, param, callbak)
+    },
+    //开启卡口
+    gateRecover(param,callbak){
+        return http.post(`${baseUrl}/v1.0/management/gate/gate-recover`, param, callbak)
     },
 }
 

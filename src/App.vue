@@ -136,11 +136,17 @@ export default {
 			isAdmin = true;
 		}
 		// 管理员权限的有平台管理
-		// this.routesData.forEach(v => {
-		// 	if(isAdmin && v.path === '/user'){
-		// 		v.hidden = false;
-		// 	}
-		// })
+		this.routesData.forEach(v => {
+			if(isAdmin && v.path === '/user'){
+				v.hidden = false;
+			}
+			if(isAdmin && v.path === '/passlog'){
+				v.hidden = false;
+			}
+			if(isAdmin && v.path === '/gateControl'){
+				v.hidden = false;
+			}
+		})
 
         const openeds = [];
         for (let i = 0; i < this.$router.options.routes.length; i++) {

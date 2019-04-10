@@ -130,7 +130,7 @@
                                    <el-form-item label="审批状态" prop="state">
                                         <el-select v-model="form.state" placeholder="未处理" class="w220">
                                             <el-option label="未处理" value=""></el-option>
-                                            <el-option label="通过" value="ACCEPTED"></el-option>
+                                            <el-option label="通过" value="ACCEPTED" v-if="isAgree"></el-option>
                                             <el-option label="未通过" value="REFUSED"></el-option>
                                         </el-select>
                                     </el-form-item>
@@ -283,7 +283,8 @@ export default {
             breadcrumbitem:'通行证审批',
             loading: true,
             gateNames:[],
-            default_limit_time: [new Date(2019, 4, 3, 0, 0), new Date(2019, 4, 3, 23, 0)]
+            default_limit_time: [new Date(2019, 4, 3, 0, 0), new Date(2019, 4, 3, 23, 0)],
+            isAgree: true,
         };
     },
     props: {
@@ -463,6 +464,11 @@ export default {
         })
         .catch(function (error) {
         });
+        // 判断是否有通行政审批同意权限
+		let  authList = this.$store.state.authorities;
+		if(authList.length == 2 && authList.indexOf('PERMIT_LIST') > -1 && authList.indexOf('PERMIT_REFUSE') > -1){
+			this.isAgree = false;
+		}
     },
     destroyed() {},
     beforeDestroy() {}

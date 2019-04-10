@@ -13,6 +13,9 @@
                     <el-form-item label="车牌号码:" prop='plateNumber'>
                         <el-input v-model="exportForm.plateNumber" placeholder="车牌号码" clearable></el-input>
                     </el-form-item>
+                    <el-form-item label="手机号:" prop='phone'>
+                        <el-input v-model="exportForm.phone" placeholder="手机号" clearable></el-input>
+                    </el-form-item>
                     <!-- <el-form-item label="通行证状态">
                         <el-select v-model="formInline.state" placeholder="未审批">
                             <el-option label="未审批" value="APPLYING"></el-option>
@@ -114,10 +117,13 @@
                     <el-table-column
                         label="操作"
                         min-width='70'
-                        fixed="right">
+                        fixed="right"
+                        v-if="isApproval">
                         <template slot-scope="scope">
                             <router-link :to='{path:"/details",query:{id:scope.row.id,state:"APPLYING",breadcrumbitem:"通行证审批"}}'
-                            class="table-action">审批</router-link>
+                            class="table-action mr10">审批</router-link>
+                            <!-- <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
+                            <a href="javascript:void(0);" v-if="isDelete" @click="handleDelete(scope.$index, scope.row)">删除</a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -155,13 +161,20 @@ export default {
         //   state: ''
         // },
         exportForm: {
-            plateNumber: ''
+            plateNumber: '',
+            phone: '',
         },
         exportFormRule:{
             plateNumber: [
                 { required: false, message: '请输入车牌号码', trigger: 'blur' },
+            ],
+            phone: [
+                { required: false, message: '请输入手机号', trigger: 'blur' },
             ]
         },
+        isApproval: true,
+        isDelete: false,
+        loading : false,
     };
   },
   props: {},
@@ -172,6 +185,7 @@ export default {
                 size: this.pageSize,
                 state: "APPLYING",
                 plate_number: this.exportForm.plateNumber,
+                phone: this.exportForm.phone,
             });
         },
         onSubmit(){
@@ -191,6 +205,32 @@ export default {
             // 重置：
             this.$refs['exportForm'].resetFields();
         },
+        //删除通行证
+        handleDelete(index,row){
+            let self = this;
+            let id = self.permitsList[index].id;
+            // 点击删除确定
+            this.$confirm('是否删除该通行证?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                self.loading = true;
+                Api.deletePermits(id).then((response) =>{    
+                    if(response && response.status === 200){
+                        self.loading = false;
+                        this.getListData();
+                    }
+                })
+                .catch(function (error) {
+                });
+            }).catch(() => {
+                // this.$message({
+                //     type: 'info',
+                //     message: '已取消删除'
+                // });          
+            });
+        },
   },
   computed: {
         ...mapState({
@@ -200,6 +240,9 @@ export default {
             },
             total: store => {
                 return store.managementPermits.permitsList.total;
+            },
+            authorities: store => {
+                return store.authorities;
             },
         }),
         permitsListLength(){
@@ -232,6 +275,14 @@ export default {
         // .catch(function (error) {
         // });
         this.getListData();
+        // 判断是否有通行政审批权限
+		let  authList = this.$store.state.authorities;
+		if(authList.length == 1 && authList.indexOf('PERMIT_LIST') > -1){
+			this.isApproval = false;
+        }
+        if(authList.indexOf('PERMIT_LIST') > -1 && authList.indexOf('PERMIT_AGREE') > -1 && authList.indexOf('PERMIT_REFUSE') > -1 && authList.indexOf('PERMIT_DELETE') > -1){
+			this.isDelete = true;
+        }
   },
   destroyed() {},
   beforeDestroy() {}
@@ -262,5 +313,8 @@ export default {
 .paging-wrapper{
     padding-top: 15px;
     text-align: right;
+}
+.mr10{
+    margin-right: 10px;
 }
 </style>
