@@ -225,6 +225,10 @@ export default {
                 })
                 .catch(function (error) {
                     self.loading = false;
+                    this.$message({
+                        type: 'warning',
+                        message: '关闭失败'
+                    }); 
                 });
             }).catch(() => {
                 // this.$message({

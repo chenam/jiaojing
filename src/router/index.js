@@ -64,7 +64,7 @@ const router =  new Router({
 		{
 			path: '/passlog',
 			name: '开闸记录',
-			icon: 'iconshenpitongguo',
+			icon: 'icont',
 			component: PassLog,
 			hidden: true,
 			meta: { 
@@ -74,7 +74,7 @@ const router =  new Router({
 		{
 			path: '/gateControl',
 			name: '卡口控制',
-			icon: 'iconshenpitongguo',
+			icon: 'iconqiakou',
 			component: GateControl,
 			hidden: true,
 			meta: { 
