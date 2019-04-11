@@ -186,7 +186,7 @@
                                     <el-form-item label="限制时间">
                                         <!-- <el-input v-model="form.limit_time" placeholder="请输入自定义时间段" clearable></el-input> -->
                                         <template v-for="(item,index) in form.limit_time">
-                                            <el-time-picker
+                                            <!-- <el-time-picker
                                                 is-range
                                                 :key="index + '1'"
                                                 v-model="form.limit_time[index].value"
@@ -199,7 +199,45 @@
                                                 default-value= default_limit_time
                                                 editable
                                             >
-                                            </el-time-picker>
+                                            </el-time-picker> -->
+                                            <el-time-select
+                                                :key="index + 'a'"
+                                                placeholder="起始时间"
+                                                v-model="form.limit_time[index].startTime"
+                                                :picker-options="{
+                                                start: '00:00',
+                                                step: '00:15',
+                                                end: '24:00'
+                                                }"
+                                                default-value=‘00:00’
+                                                class="w110"
+                                            >
+                                            </el-time-select>
+                                            <el-time-select
+                                                :key="index + 'b'"
+                                                placeholder="结束时间"
+                                                v-model="form.limit_time[index].endTime"
+                                                :picker-options="{
+                                                start: '00:00',
+                                                step: '00:15',
+                                                end: '24:00',
+                                                minTime: form.limit_time[index].startTime
+                                                }"
+                                                default-value=‘00:00’
+                                                class="w110"
+                                            >
+                                            
+                                            </el-time-select>
+                                            <!-- <el-time-select
+                                            :key="index + '1'"
+                                            v-model="form.limit_time[index].value"
+                                            :picker-options="{
+                                                start: '08:30',
+                                                step: '00:15',
+                                                end: '18:30'
+                                            }"
+                                            placeholder="选择时间">
+                                            </el-time-select> -->
                                             <span
                                                 :key="index + '2'"
                                                 class="el-icon-remove-outline delete-icon" 
@@ -250,7 +288,8 @@ export default {
                 gates:'',
                 limit_time:[{
                     // value: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)]
-                    value: ''
+                    startTime: '',
+                    endTime: ''
                 }],
                 default_limit_time: [new Date(2019, 4, 1, 0, 0), new Date(2019, 4, 2, 1, 0)]
             },
@@ -291,18 +330,25 @@ export default {
             if(this.form.state !== ""){
                 this.$refs['form'].validate((valid) => {
                     if (valid) {
+                        // console.log(this.form.limit_time,'ddd')
                         let _limit_time = [];
+                        let isPass = true;
                         this.form.limit_time.forEach((val, ind) => {
-                            if(val.value){
-                                let _arr = [];
-                                val.value.forEach((v, i) => {
-                                    
-                                    _arr.push(typeof(v) === 'object' ? Util.format(v,'hh:mm:ss') : v)
-                                })
-                                _limit_time.push(_arr.join('-'))
+                            if((val.startTime && !val.endTime) || (!val.startTime && val.endTime)){
+                                this.$message({
+                                    message: '请选择完整起止时间',
+                                    type: 'warning'
+                                });
+                                isPass = false
+                            }
+                            if(val.startTime && val.endTime){
+                                _limit_time.push(val.startTime + '-' + val.endTime);
                             }
                             
                         })
+                        if(!isPass){
+                            return;
+                        }
                         
                         let params = {
                             state: this.form.state,
@@ -354,7 +400,8 @@ export default {
         // 添加限制时间
         addLimitTime(){
             this.form.limit_time.push({
-                value: ''
+                startTime: '',
+                endTime: ''
             })
         },
         // 减少限制时间
@@ -510,7 +557,11 @@ export default {
 <style lang='less'> 
 .grid-body{
     div.w220{
-        width: 230px!important;
+        width: 240px!important;
+    }
+    div.w110{
+        width: 118px!important;
+        margin-bottom: 10px;
     }
 }
 
