@@ -84,46 +84,58 @@
             :title="title" 
             :visible.sync="dialogFormVisible"
             @closed="handleClose">
-            <el-form :model="form" :rules="rules" ref="loginForm">
-                <el-form-item 
-                    label="用户名" 
-                    :label-width="formLabelWidth"
-                    prop="username"
-                    v-if="isRegister">
-                    <el-input
-                        v-model="form.username" 
-                        class="w220"
-                        placeholder="请输入"></el-input>
-                </el-form-item>
-                <el-form-item 
-                    label="密码" 
-                    :label-width="formLabelWidth" 
-                    prop="password"
-                    v-if="isRegister">
-                    <el-input
-                        v-model="form.password" 
-                        type="password" 
-                        class="w220"
-                        placeholder="请输入"></el-input>
-                </el-form-item>
-                <el-form-item 
-                    label="权限" 
-                    :label-width="formLabelWidth">
-                    <el-select 
-                        class="w220"
-                        v-model="form.region"
-                        multiple 
-                        clearable  
-                        placeholder="请设置权限">
-                        <el-option
-                            v-for="(item, index) in options"
-                            :key="index"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-            </el-form>
+            <el-row>
+                <el-col :span="14">
+                    <el-form :model="form" :rules="rules" ref="loginForm">
+                        <el-form-item 
+                            label="用户名" 
+                            :label-width="formLabelWidth"
+                            prop="username"
+                            v-if="isRegister">
+                            <el-input
+                                v-model="form.username" 
+                                class="w220"
+                                placeholder="请输入"></el-input>
+                        </el-form-item>
+                        <el-form-item 
+                            label="密码" 
+                            :label-width="formLabelWidth" 
+                            prop="password"
+                            v-if="isRegister">
+                            <el-input
+                                v-model="form.password" 
+                                type="password" 
+                                class="w220"
+                                placeholder="请输入"></el-input>
+                        </el-form-item>
+                        <el-form-item 
+                            label="权限" 
+                            :label-width="formLabelWidth">
+                            <el-select 
+                                class="w220"
+                                v-model="form.region"
+                                multiple 
+                                clearable  
+                                placeholder="请设置权限">
+                                <el-option
+                                    v-for="(item, index) in options"
+                                    :key="index"
+                                    :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+                <el-col :span="10" v-if="isRegister">
+                    <div class="introduce">
+                        <p><b>权限介绍：</b></p>
+                        <p>通行证查询权限→通行证审批拒绝权限→通行证审批同意权限→通行证删除权限</p>
+                        <p>权限依次增强，每个权限包含之前所有权限</p>
+                        <p><b>举例：</b>只允许过滤通行证权限，拒绝部分不合理的通行证，可赋权“通行证查询权限”，“通行证审批拒绝权限”或者“通行证审批拒绝权限”</p>
+                    </div>
+                </el-col>
+            </el-row>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onSubmit" v-if="isEdit">确 定</el-button>
                 <el-button type="primary" @click="onRegister" v-if="isRegister">创 建</el-button>
@@ -175,6 +187,10 @@
 .dialog-footer{
     padding-left: 120px;
     text-align: left;
+}
+.introduce{
+    font-weight: normal;
+    line-height: 28px;
 }
 </style>
 <style lang='less'>

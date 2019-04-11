@@ -80,9 +80,8 @@
                         <template slot-scope="scope">
                             <div>
                                 <p v-if='scope.row.trigger_type'>{{scope.row.trigger_type}}</p>
-                            <p v-else>--</p>
+                                <p v-else>--</p>
                             </div>
-                            
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -93,7 +92,6 @@
                                 <p v-if='scope.row.plate_number'>{{scope.row.plate_number}}</p>
                                 <p v-else>--</p>
                             </div>
-                            
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -101,10 +99,13 @@
                         min-width="75">
                         <template slot-scope="scope">
                             <div>
-                                <div class="cell" v-if='scope.row.image_path'><img :src="`${baseUrl}`+ scope.row.image_path" width="150"></div>
+                                <a :href="`${baseUrl}`+ scope.row.image_path"
+                                    size="small"
+                                    target="_blank"
+                                    v-if="scope.row.image_path"
+                                    class="table-action">点击查看图片</a>
                                 <p v-else>--</p>
                             </div>
-                            
                         </template>
                     </el-table-column>
                 </el-table>

@@ -66,7 +66,6 @@ const router =  new Router({
 			name: '开闸记录',
 			icon: 'icont',
 			component: PassLog,
-			hidden: true,
 			meta: { 
 				requireAuth: true,
 			},

@@ -19,99 +19,95 @@
                             <div class="detailsList">
                                 <table class="el-table el-table--border">
                                     <tr v-if="state == 'FINISHED'">
-                                        <th width="30%"><div class="cell">审批意见</div></th>
+                                        <th width="20%"><div class="cell">审批意见</div></th>
                                         <td><div class="cell">{{ approvalState(tableData.state) }}</div></td>
                                     </tr>
                                     <tr v-if="state == 'FINISHED'">
-                                        <th width="30%"><div class="cell">审批备注</div></th>
+                                        <th width="20%"><div class="cell">审批备注</div></th>
                                         <td><div class="cell">{{ tableData.approval_opinion }}</div></td>
                                     </tr>
                                     <tr v-if="state == 'FINISHED'">
-                                        <th width="30%"><div class="cell">通行证编号</div></th>
+                                        <th width="20%"><div class="cell">通行证编号</div></th>
                                         <td><div class="cell">{{ tableData.permit_number }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">手机号</div></th>
+                                        <th width="20%"><div class="cell">手机号</div></th>
                                         <td><div class="cell">{{ tableData.phone }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">出发地</div></th>
+                                        <th width="20%"><div class="cell">出发地</div></th>
                                         <td><div class="cell">{{ tableData.from }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">目的地</div></th>
+                                        <th width="20%"><div class="cell">目的地</div></th>
                                         <td><div class="cell">{{ tableData.arrivals }}</div></td>
                                     </tr>
                                      <tr>
-                                        <th width="30%"><div class="cell">路线</div></th>
+                                        <th width="20%"><div class="cell">路线</div></th>
                                         <td><div class="cell">{{ tableData.route }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">运输物品</div></th>
+                                        <th width="20%"><div class="cell">运输物品</div></th>
                                         <td><div class="cell">{{ tableData.goods }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">车辆所有人</div></th>
+                                        <th width="20%"><div class="cell">车辆所有人</div></th>
                                         <td><div class="cell">{{ tableData.owner }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">车牌颜色</div></th>
+                                        <th width="20%"><div class="cell">车牌颜色</div></th>
                                         <td><div class="cell">{{ vehicleType(tableData.vehicle_type) }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">车牌号码</div></th>
+                                        <th width="20%"><div class="cell">车牌号码</div></th>
                                         <td><div class="cell">{{ tableData.plate_number }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">驾驶人驾驶证号</div></th>
+                                        <th width="20%"><div class="cell">驾驶人驾驶证号</div></th>
                                         <td><div class="cell">{{ tableData.driving_license }}</div></td>
                                     </tr>
                                     <tr v-if='tableData.gate'>
-                                        <th width="30%"><div class="cell">允许进入卡口</div></th>
+                                        <th width="20%"><div class="cell">允许进入卡口</div></th>
                                         <td><div class="cell">{{ tableData.gate }}</div></td>
                                     </tr>
                                     <tr v-if='tableData.peak_hour'>
-                                        <th width="30%"><div class="cell">高峰时间</div></th>
+                                        <th width="20%"><div class="cell">高峰时间</div></th>
                                         <td><div class="cell">{{ tableData.peak_hour }}</div></td>
                                     </tr>
                                     <tr v-if='tableData.limit_time'>
-                                        <th width="30%"><div class="cell">限制时间</div></th>
+                                        <th width="20%"><div class="cell">限制时间</div></th>
                                         <td><div class="cell">{{ tableData.limit_time }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">驾驶人驾驶证号</div></th>
-                                        <td><div class="cell">{{ tableData.driving_license }}</div></td>
-                                    </tr>
-                                    <tr>
-                                        <th width="30%"><div class="cell">途经时间起</div></th>
+                                        <th width="20%"><div class="cell">途经时间起</div></th>
                                         <td><div class="cell">{{ tableData.start_time | date-format }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">途经时间止</div></th>
+                                        <th width="20%"><div class="cell">途经时间止</div></th>
                                         <td><div class="cell">{{ tableData.end_time | date-format }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">申请时间</div></th>
+                                        <th width="20%"><div class="cell">申请时间</div></th>
                                         <td><div class="cell">{{ tableData.create_time | date-format }}</div></td>
                                     </tr>
                                     <tr v-if="tableData.approve_time">
-                                        <th width="30%"><div class="cell">批复时间</div></th>
+                                        <th width="20%"><div class="cell">批复时间</div></th>
                                         <td><div class="cell">{{ tableData.approve_time | date-format }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">车辆左前方现状图</div></th>
+                                        <th width="20%"><div class="cell">车辆左前方现状图</div></th>
                                         <td><div class="cell"><img :src="`${baseUrl}`+ tableData.photo_car_path1"></div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">行驶证正面</div></th>
+                                        <th width="20%"><div class="cell">行驶证正面</div></th>
                                         <td><div class="cell"><img :src="`${baseUrl}`+ tableData.photo_vehicle_license_path1"></div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">行驶证反面</div></th>
+                                        <th width="20%"><div class="cell">行驶证反面</div></th>
                                         <td><div class="cell"><img :src="`${baseUrl}`+ tableData.photo_vehicle_license_path2"></div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">车辆尾部照片</div></th>
+                                        <th width="20%"><div class="cell">车辆尾部照片</div></th>
                                         <td><div class="cell"><img :src="`${baseUrl}`+ tableData.photo_car_path2"></div></td>
                                     </tr>
                                 </table>

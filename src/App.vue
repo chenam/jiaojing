@@ -140,9 +140,6 @@ export default {
 			if(isAdmin && v.path === '/user'){
 				v.hidden = false;
 			}
-			if(isAdmin && v.path === '/passlog'){
-				v.hidden = false;
-			}
 			if(isAdmin && v.path === '/gateControl'){
 				v.hidden = false;
 			}

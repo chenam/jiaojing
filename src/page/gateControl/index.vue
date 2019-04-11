@@ -13,6 +13,7 @@
         </div>
 
         <div class="gateControl">
+            <p class="form-notice red">注意：关闭卡口会导致卡口一直处于关闭状态，请谨慎操作。特殊情况解除后请及时打开。</p>
             <div>
                 <el-table
                     :data="tableData"
@@ -107,6 +108,11 @@
 }
 .red{
     color: red;
+}
+.form-notice{
+    margin-bottom: 20px;
+    font-weight: normal; 
+    font-size: 14px;
 }
 </style>
 
