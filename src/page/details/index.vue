@@ -551,7 +551,7 @@ export default {
     padding: 0 10px 10px;
 }
 .el-table td img{
-    max-width: 100%;
+    max-width: 450px;
 }
 .add-icon,.delete-icon{
     font-size: 18px;

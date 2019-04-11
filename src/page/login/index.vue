@@ -140,6 +140,7 @@ export default {
 							this.$store.dispatch('setIsRem',_remember_me)
 							this.$store.dispatch('setAuthorties',response.data.authorities)
 							// this.$store.dispatch('setAuthorties',[])
+							// window.location.href = window.location.origin + '/#/unexam'
 							this.$router.push({path: "/unexam"});
 							if(localStorage.getItem('uid') !== null){
 								localStorage.removeItem('uid');

@@ -126,24 +126,12 @@ export default {
         }else{
 			this.path = 'default';
 		}
+		console.log('heihei')
+		this.setAdminMenu();
 	},
     mounted () {
-		this.routesData = this.$router.options.routes;
-		// 判断是否有管理员权限
-		let  authList = this.$store.state.authorities;
-		let isAdmin = false ;
-		if(authList.indexOf('ADMIN') > -1){
-			isAdmin = true;
-		}
-		// 管理员权限的有平台管理
-		this.routesData.forEach(v => {
-			if(isAdmin && v.path === '/user'){
-				v.hidden = false;
-			}
-			if(isAdmin && v.path === '/gateControl'){
-				v.hidden = false;
-			}
-		})
+		
+		this.setAdminMenu();
 
         const openeds = [];
         for (let i = 0; i < this.$router.options.routes.length; i++) {
@@ -159,6 +147,34 @@ export default {
         // console.log(this.$router);
     },
     methods: {
+		setAdminMenu(){
+			this.routesData = this.$router.options.routes;
+			// 判断是否有管理员权限
+			let  authList = this.$store.state.authorities;
+			let isAdmin = false ;
+			if(authList.indexOf('ADMIN') > -1){
+				isAdmin = true;
+			}
+			// 管理员权限的有平台管理
+			this.routesData.forEach(v => {
+				if(v.path === '/user'){
+					if(isAdmin){
+						v.hidden = false;
+					}else{
+						v.hidden = true;
+					}
+				}
+
+				if(v.path === '/gateControl'){
+					if(isAdmin){
+						v.hidden = false;
+					}else{
+						v.hidden = true;
+					}
+				}
+				
+			})
+		},
         toggleMenu(){
             this.isCollapse = !this.isCollapse;
         },

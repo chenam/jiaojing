@@ -28,7 +28,7 @@
                 >
                     <el-table-column type="expand">
                         <template slot-scope="scope">
-                            <el-form label-position="left" label-width="148px" inline class="demo-table-expand">
+                            <el-form label-position="left" label-width="200px" inline class="demo-table-expand">
                                 <el-form-item label="用户名">
                                     <span>{{ scope.row.name }}</span>
                                 </el-form-item>
@@ -60,6 +60,7 @@
                     </el-table-column>
                     <el-table-column 
                         label="操作"
+                        width="200px"
                     >
                         <template slot-scope="scope">
                             <el-button type="text" size="small" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
@@ -179,7 +180,7 @@
 .demo-table .demo-table-expand .el-form-item{
     margin-right: 0;
     margin-bottom: 0;
-    width: 50%;
+    width: 80%;
 }
 .w220{
     width: 230px!important;
@@ -195,7 +196,7 @@
 </style>
 <style lang='less'>
 .demo-table .demo-table-expand .el-form-item label{
-    width: 148px;
+    width: 200px;
     color: #99a9bf;
 }
 </style>
