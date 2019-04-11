@@ -8,6 +8,8 @@ import Detail from '@/page/details'
 import Permit from '@/page/permit'
 import User from '@/page/User'
 import ResetPassword from '@/page/resetPassword'
+import PassLog from '@/page/passlog'
+import GateControl from '@/page/gateControl'
 
 Vue.use(Router)
 
@@ -54,6 +56,25 @@ const router =  new Router({
 			name: '平台管理',
 			icon: 'iconpingtai_pingtaiyonghu',
 			component: User,
+			hidden: true,
+			meta: { 
+				requireAuth: true,
+			},
+		},
+		{
+			path: '/passlog',
+			name: '开闸记录',
+			icon: 'icont',
+			component: PassLog,
+			meta: { 
+				requireAuth: true,
+			},
+		},
+		{
+			path: '/gateControl',
+			name: '卡口控制',
+			icon: 'iconqiakou',
+			component: GateControl,
 			hidden: true,
 			meta: { 
 				requireAuth: true,

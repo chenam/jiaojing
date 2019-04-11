@@ -19,99 +19,95 @@
                             <div class="detailsList">
                                 <table class="el-table el-table--border">
                                     <tr v-if="state == 'FINISHED'">
-                                        <th width="30%"><div class="cell">审批意见</div></th>
+                                        <th width="20%"><div class="cell">审批意见</div></th>
                                         <td><div class="cell">{{ approvalState(tableData.state) }}</div></td>
                                     </tr>
                                     <tr v-if="state == 'FINISHED'">
-                                        <th width="30%"><div class="cell">审批备注</div></th>
+                                        <th width="20%"><div class="cell">审批备注</div></th>
                                         <td><div class="cell">{{ tableData.approval_opinion }}</div></td>
                                     </tr>
                                     <tr v-if="state == 'FINISHED'">
-                                        <th width="30%"><div class="cell">通行证编号</div></th>
+                                        <th width="20%"><div class="cell">通行证编号</div></th>
                                         <td><div class="cell">{{ tableData.permit_number }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">手机号</div></th>
+                                        <th width="20%"><div class="cell">手机号</div></th>
                                         <td><div class="cell">{{ tableData.phone }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">出发地</div></th>
+                                        <th width="20%"><div class="cell">出发地</div></th>
                                         <td><div class="cell">{{ tableData.from }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">目的地</div></th>
+                                        <th width="20%"><div class="cell">目的地</div></th>
                                         <td><div class="cell">{{ tableData.arrivals }}</div></td>
                                     </tr>
                                      <tr>
-                                        <th width="30%"><div class="cell">路线</div></th>
+                                        <th width="20%"><div class="cell">路线</div></th>
                                         <td><div class="cell">{{ tableData.route }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">运输物品</div></th>
+                                        <th width="20%"><div class="cell">运输物品</div></th>
                                         <td><div class="cell">{{ tableData.goods }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">车辆所有人</div></th>
+                                        <th width="20%"><div class="cell">车辆所有人</div></th>
                                         <td><div class="cell">{{ tableData.owner }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">车牌颜色</div></th>
+                                        <th width="20%"><div class="cell">车牌颜色</div></th>
                                         <td><div class="cell">{{ vehicleType(tableData.vehicle_type) }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">车牌号码</div></th>
+                                        <th width="20%"><div class="cell">车牌号码</div></th>
                                         <td><div class="cell">{{ tableData.plate_number }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">驾驶人驾驶证号</div></th>
+                                        <th width="20%"><div class="cell">驾驶人驾驶证号</div></th>
                                         <td><div class="cell">{{ tableData.driving_license }}</div></td>
                                     </tr>
                                     <tr v-if='tableData.gate'>
-                                        <th width="30%"><div class="cell">允许进入卡口</div></th>
+                                        <th width="20%"><div class="cell">允许进入卡口</div></th>
                                         <td><div class="cell">{{ tableData.gate }}</div></td>
                                     </tr>
                                     <tr v-if='tableData.peak_hour'>
-                                        <th width="30%"><div class="cell">高峰时间</div></th>
+                                        <th width="20%"><div class="cell">高峰时间</div></th>
                                         <td><div class="cell">{{ tableData.peak_hour }}</div></td>
                                     </tr>
                                     <tr v-if='tableData.limit_time'>
-                                        <th width="30%"><div class="cell">限制时间</div></th>
+                                        <th width="20%"><div class="cell">限制时间</div></th>
                                         <td><div class="cell">{{ tableData.limit_time }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">驾驶人驾驶证号</div></th>
-                                        <td><div class="cell">{{ tableData.driving_license }}</div></td>
-                                    </tr>
-                                    <tr>
-                                        <th width="30%"><div class="cell">途经时间起</div></th>
+                                        <th width="20%"><div class="cell">途经时间起</div></th>
                                         <td><div class="cell">{{ tableData.start_time | date-format }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">途经时间止</div></th>
+                                        <th width="20%"><div class="cell">途经时间止</div></th>
                                         <td><div class="cell">{{ tableData.end_time | date-format }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">申请时间</div></th>
+                                        <th width="20%"><div class="cell">申请时间</div></th>
                                         <td><div class="cell">{{ tableData.create_time | date-format }}</div></td>
                                     </tr>
                                     <tr v-if="tableData.approve_time">
-                                        <th width="30%"><div class="cell">批复时间</div></th>
+                                        <th width="20%"><div class="cell">批复时间</div></th>
                                         <td><div class="cell">{{ tableData.approve_time | date-format }}</div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">车辆左前方现状图</div></th>
+                                        <th width="20%"><div class="cell">车辆左前方现状图</div></th>
                                         <td><div class="cell"><img :src="`${baseUrl}`+ tableData.photo_car_path1"></div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">行驶证正面</div></th>
+                                        <th width="20%"><div class="cell">行驶证正面</div></th>
                                         <td><div class="cell"><img :src="`${baseUrl}`+ tableData.photo_vehicle_license_path1"></div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">行驶证反面</div></th>
+                                        <th width="20%"><div class="cell">行驶证反面</div></th>
                                         <td><div class="cell"><img :src="`${baseUrl}`+ tableData.photo_vehicle_license_path2"></div></td>
                                     </tr>
                                     <tr>
-                                        <th width="30%"><div class="cell">车辆尾部照片</div></th>
+                                        <th width="20%"><div class="cell">车辆尾部照片</div></th>
                                         <td><div class="cell"><img :src="`${baseUrl}`+ tableData.photo_car_path2"></div></td>
                                     </tr>
                                 </table>
@@ -130,7 +126,7 @@
                                    <el-form-item label="审批状态" prop="state">
                                         <el-select v-model="form.state" placeholder="未处理" class="w220">
                                             <el-option label="未处理" value=""></el-option>
-                                            <el-option label="通过" value="ACCEPTED"></el-option>
+                                            <el-option label="通过" value="ACCEPTED" v-if="isAgree"></el-option>
                                             <el-option label="未通过" value="REFUSED"></el-option>
                                         </el-select>
                                     </el-form-item>
@@ -149,6 +145,7 @@
                                             class="w220"
                                             v-model="form.start_time"
                                             type="datetime"
+                                            align='right'
                                             placeholder="选择日期时间">
                                         </el-date-picker>
                                     </el-form-item>
@@ -157,6 +154,7 @@
                                             class="w220"
                                             v-model="form.end_time"
                                             type="datetime"
+                                            align='right'
                                             placeholder="选择日期时间">
                                         </el-date-picker>
                                     </el-form-item>
@@ -194,9 +192,10 @@
                                                 start-placeholder="开始时间"
                                                 end-placeholder="结束时间"
                                                 clearable
+                                                align='right'
                                                 class="detail-time-range w220"
                                                 placeholder="选择时间范围"
-                                                default-value= default_limit_time
+                                                :default-value= default_limit_time
                                                 editable
                                             >
                                             </el-time-picker> -->
@@ -291,7 +290,8 @@ export default {
                     startTime: '',
                     endTime: ''
                 }],
-                default_limit_time: [new Date(2019, 4, 1, 0, 0), new Date(2019, 4, 2, 1, 0)]
+                
+                // default_limit_time: [ new Date(0, 0), new Date(0, 0)]
             },
             formRule: {
                 state: [
@@ -318,6 +318,8 @@ export default {
             breadcrumbitem:'通行证审批',
             loading: true,
             gateNames:[],
+            default_limit_time: [new Date(2019, 4, 3, 0, 0), new Date(2019, 4, 3, 23, 0)],
+            isAgree: true,
         };
     },
     props: {
@@ -505,6 +507,11 @@ export default {
         })
         .catch(function (error) {
         });
+        // 判断是否有通行政审批同意权限
+		let  authList = this.$store.state.authorities;
+		if(authList.length == 2 && authList.indexOf('PERMIT_LIST') > -1 && authList.indexOf('PERMIT_REFUSE') > -1){
+			this.isAgree = false;
+		}
     },
     destroyed() {},
     beforeDestroy() {}

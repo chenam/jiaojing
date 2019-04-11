@@ -111,6 +111,24 @@ class Http {
         if (body) options.body = body
         return this.request(url, options, callback,0)
     }
+
+    put(url, body, callback) { // PUT请求
+        let options = {
+            method: 'PUT'
+        }
+        if (body) options.body = body
+        return this.request(url, options, callback,0)
+    }
+
+    delete(url, params, callback) { // DELETE请求
+        const newUrl = params ? this.build(url, params) : url
+        let options = {
+            method: 'DELETE'
+        }
+        // console.log(params,'sss')
+        // if (params) options.body = params
+        return this.request(newUrl, options, callback)
+    }
     // postRes(url, body, callback,resCallBack) { // POST请求
     //     let options = {
     //         method: 'POST'

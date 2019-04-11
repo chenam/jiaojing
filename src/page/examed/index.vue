@@ -17,7 +17,9 @@
                 <el-form-item label="车牌号码：" prop='plateNumber'>
                     <el-input v-model="examedForm.plateNumber" placeholder="请输入" clearable></el-input>
                 </el-form-item>
-                
+                <el-form-item label="手机号:" prop='phone'>
+                    <el-input v-model="examedForm.phone" placeholder="手机号" clearable></el-input>
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="onSubmit">查询</el-button>
                     <el-button  class='el-button-reset' @click="onCancel">重置</el-button>
@@ -268,7 +270,8 @@ export default {
             // 根据角色 判断是否显示 机构名称
             orgCodeShow : true,
             examedForm: {
-                plateNumber: ''
+                plateNumber: '',
+                phone: '',
             },
             pageStart:1,
             pageSize:10,
@@ -282,6 +285,9 @@ export default {
             examedFormRule:{
                 plateNumber: [
                     { required: false, message: '请输入车牌号码', trigger: 'blur' },
+                ],
+                phone: [
+                    { required: false, message: '请输入手机号', trigger: 'blur' },
                 ]
             },
             // 机构名称下拉数据
