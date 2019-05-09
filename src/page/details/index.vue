@@ -115,7 +115,7 @@
                         </div>
                     </div>
                 </el-col>
-                <el-col :span="7" style="float:right;width:400px;" v-if="state == 'APPLYING'">
+                <el-col :span="7" style="float:right;width:500px;" v-if="state == 'APPLYING'">
                     <div class="grid-content bg-purple-light">
                         <div class="grid-header">
                             <h3 class="title">处理通行证申请</h3>
@@ -522,7 +522,7 @@ export default {
 <style lang='less' scoped>
 
 .grid-left{
-    width: calc(~'100% - 400px');
+    width: calc(~'100% - 500px');
 }
 .main{
     padding: 15px;

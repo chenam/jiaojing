@@ -42,7 +42,7 @@ export default{
     },
     //关卡
     gateNames(param,callbak){
-        return http.get(`${baseUrl}/v1.0/management/gate/names`, param, callbak)
+        return http.get(`${baseUrl}/v1.0/management/gate/group`, param, callbak)
     },
     //用户列表
     accountLists(param,callbak){

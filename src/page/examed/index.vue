@@ -20,6 +20,19 @@
                 <el-form-item label="手机号:" prop='phone'>
                     <el-input v-model="examedForm.phone" placeholder="手机号" clearable></el-input>
                 </el-form-item>
+                <el-form-item label="审批意见:" prop="state">
+                    <el-select v-model="examedForm.state" placeholder="全部">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="通过" value="ACCEPTED"></el-option>
+                        <el-option label="未通过" value="REFUSED"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="审批人:" prop='approver'>
+                    <el-input v-model="examedForm.approver" placeholder="请输入" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="通行证编号:" prop='permit_number'>
+                    <el-input v-model="examedForm.permit_number" placeholder="请输入" clearable></el-input>
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="onSubmit">查询</el-button>
                     <el-button  class='el-button-reset' @click="onCancel">重置</el-button>
@@ -272,6 +285,9 @@ export default {
             examedForm: {
                 plateNumber: '',
                 phone: '',
+                state: '',
+                approver: '',
+                permit_number: '',
             },
             pageStart:1,
             pageSize:10,
@@ -288,6 +304,15 @@ export default {
                 ],
                 phone: [
                     { required: false, message: '请输入手机号', trigger: 'blur' },
+                ],
+                state: [
+                    { required: false, message: '请输入审批意见', trigger: 'blur' },
+                ],
+                approver: [
+                    { required: false, message: '请输入审批人', trigger: 'blur' },
+                ],
+                permit_number: [
+                    { required: false, message: '请输入通行证编号', trigger: 'blur' },
                 ]
             },
             // 机构名称下拉数据
@@ -327,7 +352,11 @@ export default {
                 page: this.pageStart,
                 size: this.pageSize,
                 state: 'FINISHED',
-                plate_number: this.examedForm.plateNumber
+                plate_number: this.examedForm.plateNumber,
+                phone: this.examedForm.phone,
+                state: this.examedForm.state,
+                approver: this.examedForm.approver,
+                permit_number: this.examedForm.permit_number,
             }).then((response) =>{
                     console.log(response)
                     
