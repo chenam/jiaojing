@@ -181,9 +181,9 @@ export default {
         //恢复卡口
         handleRecover(index,row){
             let self = this;
-            let gateNames = [];
-            gateNames.push(self.tableData[index].gate_name);
-            let param = {gate_names: gateNames}
+            let gateNums = [];
+            gateNums.push(self.tableData[index].gate_num);
+            let param = {gate_nums: gateNums}
             Api.gateRecover(param).then((response) =>{    
                 if(response && response.status === 200){
                     this.getListData();
@@ -203,9 +203,9 @@ export default {
         //关闭卡口
         handleClose(index,row){
            let self = this;
-           let gateNames = [];
-           gateNames.push(self.tableData[index].gate_name)
-           let param = {gate_names: gateNames}
+           let gateNums = [];
+           gateNums.push(self.tableData[index].gate_num)
+           let param = {gate_nums: gateNums}
             // 点击关闭确定
             this.$confirm('是否关闭该卡口?', '提示', {
                 confirmButtonText: '确定',

@@ -9,6 +9,9 @@ import axios from 'axios';
 import 'element-ui/lib/theme-chalk/index.css';
 import '@/assets/css/all.css';
 import './util/filter.js'
+import $ from 'jquery'
+import 'bootstrap/css/bootstrap.min.css';
+import 'bootstrap/css/bootstrap-datetimepicker.min.css';
 
 Vue.config.productionTip = false
 Vue.use(ElementUI);

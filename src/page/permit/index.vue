@@ -19,6 +19,10 @@
                                         <td><div class="cell">{{ tableData.plate_number }}</div></td>
                                     </tr>
                                     <tr>
+                                        <th><div class="cell">车牌类型</div></th>
+                                        <td><div class="cell">{{ vehicleType(tableData.vehicle_type) }}</div></td>
+                                    </tr>
+                                    <tr>
                                         <th><div class="cell">出发地</div></th>
                                         <td><div class="cell">{{ tableData.from }}</div></td>
                                     </tr>
@@ -93,7 +97,22 @@ export default {
 
     },
     methods: {
-
+        //车牌类型
+        vehicleType(type){
+            switch (type) {
+                case "yellow":
+                return "黄牌";
+                break;
+                case "blue":
+                return "蓝牌";
+                break;
+                case "green":
+                return "绿牌";
+                break;
+                default:
+                break;
+            }
+        }
     },
     computed: {
         

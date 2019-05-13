@@ -43,6 +43,7 @@
             <div>
                 <el-table
                     :data="tableData"
+                    @sort-change="orderList"
                     style="width: 100%"
                     border
                 >
@@ -57,6 +58,8 @@
                     </el-table-column>
                     <el-table-column
                         label="通行证编号"
+                        sortable="custom"
+                        prop="permit_number"
                         min-width="110">
                         <template slot-scope="scope">
                             <p v-if='scope.row.permit_number'>{{scope.row.permit_number}}</p>
@@ -128,8 +131,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        prop="gmtCreateStr"
+                        prop="start_time"
                         label="途径时间起"
+                        sortable="custom"
                         min-width="110">
                         <template slot-scope="scope">
                             <div>
@@ -140,8 +144,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        prop="gmtCreateStr"
+                        prop="end_time"
                         label="途径时间止"
+                        sortable="custom"
                         min-width="110">
                         <template slot-scope="scope">
                             <div>
@@ -152,8 +157,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        prop="gmtCreateStr"
+                        prop="approve_time"
                         label="批复时间"
+                        sortable="custom"
                         min-width="110">
                         <template slot-scope="scope">
                             <div>
@@ -293,6 +299,8 @@ export default {
             pageSize:10,
             totalNum:0,
             tableData: [],
+            order_by:"",
+            sort: 1,
             // 是否是教授
             isProfessor:false,
             // 所属机构
@@ -357,6 +365,8 @@ export default {
                 state: this.examedForm.state,
                 approver: this.examedForm.approver,
                 permit_number: this.examedForm.permit_number,
+                order_by: this.order_by,
+                sort: this.sort,
             }).then((response) =>{
                     console.log(response)
                     
@@ -465,7 +475,19 @@ export default {
         onCancel(){
             // 重置：
             this.$refs['examedForm'].resetFields();
-
+            this.order_by="";
+            this.sort= 1;
+            this.getListData();
+        },
+        //排序
+        orderList(column){
+            this.order_by = column.prop;
+            if (column.order === 'ascending') {
+                this.sort = 0;
+            } else {
+                this.sort = 1;
+            }
+            this.getListData();
         },
         handleEdit(index,row){
             // 修订
@@ -522,7 +544,7 @@ export default {
                 };
                 window.open(`/literature/exportBookInfoByOrg?titleName=${self.examedForm.titleName}&orgCode=${orgCode}&fileType=${self.totalSearchForm.fileType}`);
             };
-        }
+        },
     }
 }
 </script>

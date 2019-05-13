@@ -31,6 +31,7 @@
             <div class="resultList">
                 <el-table
                     :data="permitsList"
+                    @sort-change="orderList"
                     border
                     >
                     <el-table-column
@@ -92,6 +93,8 @@
                     </el-table-column>
                     <el-table-column
                         label="途经时间起"
+                        prop="start_time"
+                        sortable="custom"
                         min-width="105">
                         <template slot-scope="scope">
                             <p v-if='scope.row.start_time'>{{scope.row.start_time | date-format}}</p>
@@ -100,6 +103,8 @@
                     </el-table-column>
                     <el-table-column
                         label="途经时间止"
+                        prop="end_time"
+                        sortable="custom"
                         min-width="105">
                         <template slot-scope="scope">
                             <p v-if='scope.row.end_time'>{{scope.row.end_time | date-format}}</p>
@@ -108,6 +113,8 @@
                     </el-table-column>
                     <el-table-column
                         label="申请时间"
+                        prop="create_time"
+                        sortable="custom"
                         min-width="105">
                         <template slot-scope="scope">
                             <p v-if='scope.row.create_time'>{{scope.row.create_time | date-format}}</p>
@@ -156,6 +163,8 @@ export default {
         state: "APPLYING",
         plate_number: "",
         value: "",
+        order_by:"",
+        sort: 1,
         // formInline: {
         //   number: '',
         //   state: ''
@@ -186,6 +195,8 @@ export default {
                 state: "APPLYING",
                 plate_number: this.exportForm.plateNumber,
                 phone: this.exportForm.phone,
+                order_by: this.order_by,
+                sort: this.sort,
             });
         },
         onSubmit(){
@@ -204,6 +215,9 @@ export default {
         onCancel(){
             // 重置：
             this.$refs['exportForm'].resetFields();
+            this.order_by="";
+            this.sort= 1;
+            this.getListData();
         },
         //删除通行证
         handleDelete(index,row){
@@ -231,6 +245,16 @@ export default {
                 // });          
             });
         },
+        //排序
+        orderList(column){
+            this.order_by = column.prop;
+            if (column.order === 'ascending') {
+                this.sort = 0;
+            } else {
+                this.sort = 1;
+            }
+            this.getListData();
+        }
   },
   computed: {
         ...mapState({

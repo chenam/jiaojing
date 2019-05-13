@@ -63,6 +63,10 @@
                                         <td><div class="cell">{{ tableData.plate_number }}</div></td>
                                     </tr>
                                     <tr>
+                                        <th width="20%"><div class="cell">挂车车牌</div></th>
+                                        <td><div class="cell">{{ tableData.trailer_plate_number }}</div></td>
+                                    </tr>
+                                    <tr>
                                         <th width="20%"><div class="cell">驾驶人驾驶证号</div></th>
                                         <td><div class="cell">{{ tableData.driving_license }}</div></td>
                                     </tr>
@@ -131,7 +135,7 @@
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item label="审批备注" prop="remarks">
-                                        <el-select v-model="form.remarks" placeholder="无"  class="w220">
+                                        <el-select v-model="form.remarks" placeholder="无" class="w220">
                                             <el-option 
                                                 v-for="(item, index) in options" 
                                                 :key="index" 
@@ -141,22 +145,36 @@
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item label="途经时间起" prop="start_time">
-                                        <el-date-picker
+                                        <!-- <el-date-picker
                                             class="w220"
                                             v-model="form.start_time"
                                             type="datetime"
                                             align='right'
                                             placeholder="选择日期时间">
-                                        </el-date-picker>
+                                        </el-date-picker> -->
+                                        <el-input 
+                                            v-model="form.start_time" 
+                                            class="w220" 
+                                            id="startTime"
+                                            prefix-icon="el-icon-time"
+                                            clearable>
+                                        </el-input>
                                     </el-form-item>
                                     <el-form-item label="途经时间止" prop="end_time">
-                                        <el-date-picker
+                                        <!-- <el-date-picker
                                             class="w220"
                                             v-model="form.end_time"
                                             type="datetime"
                                             align='right'
                                             placeholder="选择日期时间">
-                                        </el-date-picker>
+                                        </el-date-picker> -->
+                                        <el-input 
+                                            v-model="form.end_time" 
+                                            class="w220" 
+                                            id="endTime"
+                                            prefix-icon="el-icon-time"
+                                            clearable>
+                                        </el-input>
                                     </el-form-item>
                                     <el-form-item label="允许进入卡口" prop="gates">
                                         <el-select 
@@ -271,6 +289,9 @@
 import Api  from '../../api/index.js';
 import Util from '../../util/util.js'
 import { mapState } from "vuex";
+import 'bootstrap/js/bootstrap.min.js';
+import 'bootstrap/js/bootstrap-datetimepicker.js';
+import 'bootstrap/js/bootstrap-datetimepicker.fr.js';
 export default {
     name: "details",
     components: {},
@@ -363,6 +384,7 @@ export default {
                             limit_time: _limit_time.join(','),
                         }
                         // console.log(params,'params')
+                        console.log(new Date(this.form.start_time).valueOf(),this.form.end_time)
                         Api.approvalPermits(params,this.$route.query.id)
                         .then((response) =>{
                             if(response && response.status === 200){
@@ -441,7 +463,70 @@ export default {
                 default:
                 break;
             }
-        }
+        },
+        //途径时间
+        dateStartDefind (obj) {
+            var self = this;
+            obj.datetimepicker({
+                startDate: self.form.start_time,
+                minView: "hour",
+                language: 'zh-CN',
+                format: 'yyyy-mm-dd hh:ii',
+                todayBtn: 1,
+                autoclose: 1
+            });
+            obj.datetimepicker()
+                .on('hide', function (ev) {
+                    var value = obj.val();
+                    self.form.start_time = value;
+            });
+        },
+        dateEndDefind (obj) {
+            var self = this;
+            obj.datetimepicker({
+                startDate: self.form.end_time,
+                minView: "hour",
+                language: 'zh-CN',
+                format: 'yyyy-mm-dd hh:ii',
+                todayBtn: 1,
+                autoclose: 1
+            });
+            obj.datetimepicker()
+                .on('hide', function (ev) {
+                    var value = obj.val();
+                    self.form.end_time = value;
+            });
+        },
+        formatDate(fmt, mydate) {
+            if (!mydate) return "";
+            var mydate = new Date(mydate);
+            var o = {
+                "Y+": mydate.getFullYear(),
+                "M+": mydate.getMonth() + 1, //月份
+                "d+": mydate.getDate(), //日
+                "h+": mydate.getHours(), //小时
+                "m+": mydate.getMinutes(), //分
+                "s+": mydate.getSeconds(), //秒
+                "q+": Math.floor((mydate.getMonth() + 3) / 3), //季度
+                S: mydate.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1);
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    //
+                    if (k == "Y+") {
+                        fmt = fmt.replace(RegExp.$1, o[k]);
+                    }
+                    fmt = fmt.replace(
+                        RegExp.$1,
+                        RegExp.$1.length == 1
+                            ? o[k]
+                            : ("00" + o[k]).substr(("" + o[k]).length)
+                    );
+                }
+            }
+            return fmt;
+        },
     },
     computed: {
         // ...mapState({
@@ -492,10 +577,10 @@ export default {
         .then((response) =>{
             if(response && response.status === 200){
                 this.tableData = response.data;
-                this.form.start_time = this.tableData.start_time;
-                this.form.end_time = this.tableData.end_time;
+                this.form.start_time = this.formatDate('YY-MM-dd hh:mm',this.tableData.start_time);
+                this.form.end_time = this.formatDate('YY-MM-dd hh:mm',this.tableData.end_time);
                 this.form.desc = this.tableData.route;
-                console.log(this.form,'ddd')
+                console.log(this.form,'ddd');
                 this.loading = false;
                 // this.imgUrl(this.tableData.photo_car_path1);
                 // this.imgUrl(this.tableData.photo_vehicle_license_path1);
@@ -511,7 +596,10 @@ export default {
 		let  authList = this.$store.state.authorities;
 		if(authList.length == 2 && authList.indexOf('PERMIT_LIST') > -1 && authList.indexOf('PERMIT_REFUSE') > -1){
 			this.isAgree = false;
-		}
+        }
+        
+        this.dateStartDefind($('#startTime'));
+        this.dateEndDefind($('#endTime'));
     },
     destroyed() {},
     beforeDestroy() {}
