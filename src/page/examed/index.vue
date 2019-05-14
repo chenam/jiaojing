@@ -22,7 +22,7 @@
                 </el-form-item>
                 <el-form-item label="审批意见:" prop="state">
                     <el-select v-model="examedForm.state" placeholder="全部">
-                        <el-option label="全部" value=""></el-option>
+                        <el-option label="全部" value="FINISHED"></el-option>
                         <el-option label="通过" value="ACCEPTED"></el-option>
                         <el-option label="未通过" value="REFUSED"></el-option>
                     </el-select>
@@ -291,7 +291,7 @@ export default {
             examedForm: {
                 plateNumber: '',
                 phone: '',
-                state: '',
+                state: 'FINISHED',
                 approver: '',
                 permit_number: '',
             },

@@ -199,7 +199,7 @@
                                             <el-option label="冬季（7:00-8:30,11:30-12:30,17:30-19:30）" value="7:00-8:30,11:30-12:30,17:30-19:30"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="限制时间">
+                                    <el-form-item label="限制时间" style="padding-right:10px;">
                                         <!-- <el-input v-model="form.limit_time" placeholder="请输入自定义时间段" clearable></el-input> -->
                                         <template v-for="(item,index) in form.limit_time">
                                             <!-- <el-time-picker
