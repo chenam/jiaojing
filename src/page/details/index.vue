@@ -384,7 +384,6 @@ export default {
                             limit_time: _limit_time.join(','),
                         }
                         // console.log(params,'params')
-                        console.log(new Date(this.form.start_time).valueOf(),this.form.end_time)
                         Api.approvalPermits(params,this.$route.query.id)
                         .then((response) =>{
                             if(response && response.status === 200){
@@ -580,7 +579,6 @@ export default {
                 this.form.start_time = this.formatDate('YY-MM-dd hh:mm',this.tableData.start_time);
                 this.form.end_time = this.formatDate('YY-MM-dd hh:mm',this.tableData.end_time);
                 this.form.desc = this.tableData.route;
-                console.log(this.form,'ddd');
                 this.loading = false;
                 // this.imgUrl(this.tableData.photo_car_path1);
                 // this.imgUrl(this.tableData.photo_vehicle_license_path1);
@@ -667,6 +665,17 @@ export default {
             width: 20px;
         }
 }
-
+.el-scrollbar__view{
+    overflow: hidden;
+}
+.time-select-item{
+    float:left;
+}
+.time-select{
+    width:230px !important;
+}
+.time-select .el-picker-panel__content{
+    max-height:270px;
+}
 </style>
 
