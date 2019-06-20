@@ -191,14 +191,24 @@
                             <a href="javascript:;" 
                                 size="small"
                                 @click="handleEdit(scope.$index, scope.row)" v-if='scope.row.modifyButton' class="table-action">修订</a>
-                            <router-link :to='{path:"/details",query:{id:scope.row.id,state:"FINISHED",breadcrumbitem:"审批日志"}}'
-                            class="table-action mr10">查看</router-link>
-                            <router-link v-if='scope.row.state !== "REFUSED"' :to='{path:"/permit",query:{id:scope.row.id,plate_number:scope.row.plate_number,permit_number:scope.row.permit_number,phone:scope.row.phone}}'
-                            class="table-action">查看电子通行证</router-link>
+                            <router-link 
+                                :to='{path:"/details",query:{id:scope.row.id,state:"FINISHED",breadcrumbitem:"审批日志"}}'
+                                class="table-action mr10">
+                                <i class="el-icon-view" title="查看" style="font-size:16px;"></i>
+                            </router-link>
+                            <router-link 
+                                v-if='scope.row.state !== "REFUSED"' 
+                                :to='{path:"/permit",query:{id:scope.row.id,plate_number:scope.row.plate_number,permit_number:scope.row.permit_number,phone:scope.row.phone}}'
+                                class="table-action mr10">
+                                <i class="el-icon-tickets" title="查看电子通行证" style="font-size:16px;"></i>
+                            </router-link>
                             <a href="javascript:;"
-                                size="small"
                                 type="danger"
-                                @click="handleDelete(scope.$index, scope.row)" v-if='scope.row.modifyButton' class="table-action">删除</a>
+                                v-if='scope.row.state == "ACCEPTED"'
+                                @click="handleRevoke(scope.$index, scope.row)" 
+                                class="table-action">
+                                <i class="el-icon-refresh-left" title="撤销" style="font-size:16px;"></i>
+                            </a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -215,6 +225,31 @@
                 </el-pagination>
             </div>
         </div>
+        <el-dialog 
+            :title="title" 
+            :visible.sync="dialogFormVisible"
+            width="30%"
+            @closed="handleClose">
+            <el-row>
+                <el-form :model="form" ref="loginForm">
+                    <el-form-item 
+                        label="撤销理由">
+                        <el-select v-model="form.remarks" placeholder="无" class="w220">
+                            <el-option 
+                                v-for="(item, index) in options" 
+                                :key="index" 
+                                :label="item.content" 
+                                :value="item.content">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+            </el-row>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="onSubmitdialog">确 定</el-button>
+                <el-button @click="onCanceldialog">取消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -279,6 +314,17 @@ export default {
     },
     mounted : function(){
         this.getListData();
+        let params = {};
+        Api.opinions(params)
+        .then((response) =>{
+            if(response && response.status === 200){
+                this.options = response.data;
+            }else{
+
+            }            
+        })
+        .catch(function (error) {
+        });
     },
     // beforeRouteLeave : function(to, from, next){
         
@@ -324,8 +370,14 @@ export default {
                 ]
             },
             // 机构名称下拉数据
-            orgData:[]
-
+            orgData:[],
+            dialogFormVisible: false,
+            title:"撤销通行证",
+            options: [],
+            form:{
+                remarks: '无',
+            },
+            permitsId:'',
         })
     },
     methods : {
@@ -368,7 +420,6 @@ export default {
                 order_by: this.order_by,
                 sort: this.sort,
             }).then((response) =>{
-                    console.log(response)
                     
                     if(response && response.status === 200){
                         this.tableData = response.data.permits;
@@ -428,6 +479,34 @@ export default {
             // pageStart变化
             this.pageStart = value;
             this.getListData();
+        },
+        //点击撤销按钮
+        handleRevoke(index,row){
+            this.permitsId = this.tableData[index].id;
+            this.dialogFormVisible = true;
+        },
+        //关闭弹框
+        handleClose(){
+            //this.dialogFormVisible = false;
+        },
+        onCanceldialog(){
+            this.dialogFormVisible = false;
+        },
+        //撤销通行证
+        onSubmitdialog (){
+            let params = {approval_opinion: this.form.remarks};
+            Api.cancelPermits(params,this.permitsId)
+            .then((response) =>{
+                if(response && response.status === 200){
+                    this.getListData();
+                    this.dialogFormVisible = false;
+                    this.form.remarks = '无';
+
+                }
+            })
+            .catch(function (error) {
+                this.dialogFormVisible = false;
+            });
         },
         handleDelete(index,row){
             let self = this;

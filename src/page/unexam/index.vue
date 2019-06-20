@@ -128,9 +128,9 @@
                         v-if="isApproval">
                         <template slot-scope="scope">
                             <router-link :to='{path:"/details",query:{id:scope.row.id,state:"APPLYING",breadcrumbitem:"通行证审批"}}'
-                            class="table-action mr10">审批</router-link>
+                            class="table-action mr10"><i class="el-icon-circle-check" title="审批" style="font-size:16px;"></i></router-link>
                             <!-- <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
-                            <a href="javascript:void(0);" v-if="isDelete" @click="handleDelete(scope.$index, scope.row)">删除</a>
+                            <a href="javascript:void(0);" v-if="isDelete" @click="handleDelete(scope.$index, scope.row)"><i class="el-icon-delete" title="删除" style="font-size:16px;"></i></a>
                         </template>
                     </el-table-column>
                 </el-table>

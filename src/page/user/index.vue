@@ -63,8 +63,8 @@
                         width="200px"
                     >
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-                            <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            <el-button type="text" @click="handleEdit(scope.$index, scope.row)" icon="el-icon-edit" title="修改" style="font-size:16px;"></el-button>
+                            <el-button type="text" @click="handleDelete(scope.$index, scope.row)" icon="el-icon-delete" title="删除" style="font-size:16px;"></el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -128,12 +128,13 @@
                         </el-form-item>
                     </el-form>
                 </el-col>
-                <el-col :span="10" v-if="isRegister">
+                <el-col :span="10">
                     <div class="introduce">
                         <p><b>权限介绍：</b></p>
-                        <p>通行证查询权限→通行证审批拒绝权限→通行证审批同意权限→通行证删除权限</p>
+                        <p>① 通行证查询权限→通行证审批拒绝权限→通行证审批同意权限→通行证删除权限</p>
                         <p>权限依次增强，每个权限包含之前所有权限</p>
                         <p><b>举例：</b>只允许过滤通行证权限，拒绝部分不合理的通行证，可赋权“通行证查询权限”，“通行证审批拒绝权限”或者“通行证审批拒绝权限”</p>
+                        <p>② 卡口控制权限可以控制各个卡口的锁定恢复及手持终端机的使用</p>
                     </div>
                 </el-col>
             </el-row>
@@ -263,6 +264,9 @@ export default {
                 }, {
                 value: 'PERMIT_DELETE',
                 label: '通行证删除权限'
+                }, {
+                value: 'GATE_CONTROLLER',
+                label: '卡口控制权限'
             }],
             title:"创建用户",
             isRegister: false,

@@ -23,7 +23,7 @@
                     <el-table-column
                         label="卡口名称">
                         <template slot-scope="scope">
-                            <p  v-if='scope.row.gate_name' >{{scope.row.gate_name}}</p>
+                            <p  v-if='scope.row.group_name' >{{scope.row.group_name}}</p>
                             <p v-else>--</p>
                         </template>
                     </el-table-column>
@@ -47,11 +47,11 @@
                                 size="small"
                                 v-if="scope.row.status != 'CLOSED'"
                                 type="danger"
-                                @click="handleClose(scope.$index, scope.row)" class="table-action mr10">关闭</a>
+                                @click="handleClose(scope.$index, scope.row)" class="table-action mr10"><i class="el-icon-turn-off" title="关闭" style="font-size:16px;"></i></a>
                             <a href="javascript:;"
                                 size="small"
                                 v-if="scope.row.status != 'NORMAL'"
-                                @click="handleRecover(scope.$index, scope.row)" class="table-action">恢复</a>
+                                @click="handleRecover(scope.$index, scope.row)" class="table-action"><i class="el-icon-open" title="恢复" style="font-size:16px;"></i></a>
                         </template>
                     </el-table-column>
                 </el-table>

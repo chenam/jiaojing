@@ -74,15 +74,19 @@ export default{
     },
     //查看卡口状态
     gateStatus(param,callbak){
-        return http.get(`${baseUrl}/v1.0/management/gate/status`, param, callbak)
+        return http.get(`${baseUrl}/v1.0/gate/status`, param, callbak)
     },
     //关闭卡口
     gateClose(param,callbak){
-        return http.post(`${baseUrl}/v1.0/management/gate/gate-close`, param, callbak)
+        return http.post(`${baseUrl}/v1.0/gate/gate-close`, param, callbak)
     },
     //开启卡口
     gateRecover(param,callbak){
-        return http.post(`${baseUrl}/v1.0/management/gate/gate-recover`, param, callbak)
+        return http.post(`${baseUrl}/v1.0/gate/gate-recover`, param, callbak)
+    },
+    //取消通行证
+    cancelPermits(param,id,callbak){
+        return http.post(`${baseUrl}/v1.0/management/permits/cancel/${id}`, param, callbak)
     },
 }
 

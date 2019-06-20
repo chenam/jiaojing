@@ -126,7 +126,7 @@
                         </div>
                         <div class="grid-body">
                             <div class="detailsForm">
-                                <el-form ref="form" :model="form" label-width="100px"  :rules=formRule>
+                                <el-form ref="form" :model="form" label-width="100px"  :rules='formRule'>
                                    <el-form-item label="审批状态" prop="state">
                                         <el-select v-model="form.state" placeholder="未处理" class="w220">
                                             <el-option label="未处理" value=""></el-option>

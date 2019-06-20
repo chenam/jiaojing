@@ -13,7 +13,8 @@ module.exports = {
     proxyTable: {
       // proxy all requests starting with /api to jsonplaceholder
       '*': {
-        target: 'https://tony-traffic.com',
+        //target: 'https://tony-traffic.com',
+        target: 'https://test.tony-traffic.com',
         changeOrigin: true,
         pathRewrite: {
           // '^/api': ''  // 若target中没有/api、这里又为空，则404；

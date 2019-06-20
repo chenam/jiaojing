@@ -152,8 +152,12 @@ export default {
 			// 判断是否有管理员权限
 			let  authList = this.$store.state.authorities;
 			let isAdmin = false ;
+			let isGateControl = false ;
 			if(authList.indexOf('ADMIN') > -1){
 				isAdmin = true;
+			}
+			if(authList.indexOf('GATE_CONTROLLER') > -1){
+				isGateControl = true;
 			}
 			// 管理员权限的有平台管理
 			this.routesData.forEach(v => {
@@ -166,7 +170,14 @@ export default {
 				}
 
 				if(v.path === '/gateControl'){
-					if(isAdmin){
+					if(isGateControl){
+						v.hidden = false;
+					}else{
+						v.hidden = true;
+					}
+				}
+				if(v.path === '/passlog'){
+					if(isGateControl){
 						v.hidden = false;
 					}else{
 						v.hidden = true;
