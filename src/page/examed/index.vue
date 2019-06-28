@@ -194,20 +194,20 @@
                             <router-link 
                                 :to='{path:"/details",query:{id:scope.row.id,state:"FINISHED",breadcrumbitem:"审批日志"}}'
                                 class="table-action mr10">
-                                <i class="el-icon-view" title="查看" style="font-size:16px;"></i>
+                                <i class="iconfont iconview" title="查看" style="font-size:16px;"></i>
                             </router-link>
                             <router-link 
                                 v-if='scope.row.state !== "REFUSED"' 
                                 :to='{path:"/permit",query:{id:scope.row.id,plate_number:scope.row.plate_number,permit_number:scope.row.permit_number,phone:scope.row.phone}}'
                                 class="table-action mr10">
-                                <i class="el-icon-tickets" title="查看电子通行证" style="font-size:16px;"></i>
+                                <i class="iconfont iconcheliangtonghangzheng" title="查看电子通行证" style="font-size:18px;"></i>
                             </router-link>
                             <a href="javascript:;"
                                 type="danger"
                                 v-if='scope.row.state == "ACCEPTED"'
                                 @click="handleRevoke(scope.$index, scope.row)" 
                                 class="table-action">
-                                <i class="el-icon-refresh-left" title="撤销" style="font-size:16px;"></i>
+                                <i class="iconfont iconyuyuechexiao" title="撤销" style="font-size:18px;"></i>
                             </a>
                         </template>
                     </el-table-column>
@@ -282,6 +282,7 @@
     font-size: 18px;
     font-weight: normal;
 }
+a:hover{text-decoration: none;}
 </style>
 
 <script>

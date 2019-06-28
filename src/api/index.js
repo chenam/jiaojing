@@ -88,6 +88,18 @@ export default{
     cancelPermits(param,id,callbak){
         return http.post(`${baseUrl}/v1.0/management/permits/cancel/${id}`, param, callbak)
     },
+    //白名单列表
+    gateWhitelist(param,callbak){
+        return http.get(`${baseUrl}/v1.0/gate/whitelist`, param, callbak)
+    },
+    //添加白名单
+    addWhitelist(param,callbak){
+        return http.post(`${baseUrl}/v1.0/gate/whitelist`, param, callbak)
+    },
+    //删除白名单
+    deleteWhitelist(id,callbak) {
+        return http.delete(`${baseUrl}/v1.0/gate/whitelist/${id}`, callbak)
+    },
 }
 
 

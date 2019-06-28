@@ -87,7 +87,7 @@
                         label="车牌号码"
                         min-width="75">
                         <template slot-scope="scope">
-                            <p v-if='scope.row.phone'>{{scope.row.plate_number}}</p>
+                            <p v-if='scope.row.plate_number'>{{scope.row.plate_number}}</p>
                             <p v-else>--</p>
                         </template>
                     </el-table-column>
@@ -128,7 +128,7 @@
                         v-if="isApproval">
                         <template slot-scope="scope">
                             <router-link :to='{path:"/details",query:{id:scope.row.id,state:"APPLYING",breadcrumbitem:"通行证审批"}}'
-                            class="table-action mr10"><i class="el-icon-circle-check" title="审批" style="font-size:16px;"></i></router-link>
+                            class="table-action mr10"><i class="iconfont icontonghangzhengshenpi" title="审批" style="font-size:18px;"></i></router-link>
                             <!-- <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
                             <a href="javascript:void(0);" v-if="isDelete" @click="handleDelete(scope.$index, scope.row)"><i class="el-icon-delete" title="删除" style="font-size:16px;"></i></a>
                         </template>
@@ -234,15 +234,18 @@ export default {
                     if(response && response.status === 200){
                         self.loading = false;
                         this.getListData();
+                    }else{
+                        self.loading = false;
                     }
                 })
                 .catch(function (error) {
+                    self.loading = false;
                 });
             }).catch(() => {
-                // this.$message({
-                //     type: 'info',
-                //     message: '已取消删除'
-                // });          
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
             });
         },
         //排序
@@ -341,4 +344,5 @@ export default {
 .mr10{
     margin-right: 10px;
 }
+a:hover{text-decoration: none;}
 </style>

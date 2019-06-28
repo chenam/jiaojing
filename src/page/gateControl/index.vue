@@ -47,11 +47,11 @@
                                 size="small"
                                 v-if="scope.row.status != 'CLOSED'"
                                 type="danger"
-                                @click="handleClose(scope.$index, scope.row)" class="table-action mr10"><i class="el-icon-turn-off" title="关闭" style="font-size:16px;"></i></a>
+                                @click="handleClose(scope.$index, scope.row)" class="table-action mr10"><i class="iconfont iconclose" title="关闭" style="font-size:17px;"></i></a>
                             <a href="javascript:;"
                                 size="small"
                                 v-if="scope.row.status != 'NORMAL'"
-                                @click="handleRecover(scope.$index, scope.row)" class="table-action"><i class="el-icon-open" title="恢复" style="font-size:16px;"></i></a>
+                                @click="handleRecover(scope.$index, scope.row)" class="table-action"><i class="iconfont iconqidong" title="恢复" style="font-size:16px;"></i></a>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -114,6 +114,7 @@
     font-weight: normal; 
     font-size: 14px;
 }
+a,a:hover{text-decoration: none;}
 </style>
 
 <script>
@@ -187,17 +188,17 @@ export default {
             Api.gateRecover(param).then((response) =>{    
                 if(response && response.status === 200){
                     this.getListData();
-                    this.$message({
-                        type: 'success',
-                        message: '恢复成功'
-                    }); 
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: '恢复成功'
+                    // }); 
                 }
             })
             .catch(function (error) {
-                this.$message({
-                    type: 'warning',
-                    message: '恢复失败'
-                }); 
+                // this.$message({
+                //     type: 'warning',
+                //     message: '恢复失败'
+                // }); 
             });
         },
         //关闭卡口
@@ -217,24 +218,24 @@ export default {
                     if(response && response.status === 200){
                         self.loading = false;
                         this.getListData();
-                        this.$message({
-                            type: 'success',
-                            message: '关闭成功'
-                        }); 
+                        // this.$message({
+                        //     type: 'success',
+                        //     message: '关闭成功'
+                        // }); 
                     }else{
                         self.loading = false;
-                        this.$message({
-                            type: 'warning',
-                            message: '关闭失败'
-                        }); 
+                        // this.$message({
+                        //     type: 'warning',
+                        //     message: '关闭失败'
+                        // }); 
                     }
                 })
                 .catch(function (error) {
                     self.loading = false;
-                    this.$message({
-                        type: 'warning',
-                        message: '关闭失败'
-                    }); 
+                    // this.$message({
+                    //     type: 'warning',
+                    //     message: '关闭失败'
+                    // }); 
                 });
             }).catch(() => {
                 // this.$message({

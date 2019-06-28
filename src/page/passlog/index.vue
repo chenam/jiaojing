@@ -102,7 +102,7 @@
                                 <a :href="`${baseUrl}`+ scope.row.image_path"
                                     target="_blank"
                                     v-if="scope.row.image_path"
-                                    class="table-action"><i class="el-icon-picture-outline" title="点击查看图片" style="font-size:18px;"></i></a>
+                                    class="table-action"><i class="iconfont iconjietu" title="点击查看图片" style="font-size:18px;"></i></a>
                                 <p v-else>--</p>
                             </div>
                         </template>
@@ -153,6 +153,7 @@
     font-size: 18px;
     font-weight: normal;
 }
+a:hover{text-decoration: none;}
 </style>
 
 <script>

@@ -81,6 +81,60 @@
                 </el-pagination>
             </div>
         </div>
+        <div class="examed pt0" v-if='isWhite'>
+            <el-form :inline="true" class="demo-form-inline" empty-text="暂无数据">
+                <el-form-item>
+                    <el-button type="primary" @click="addWhite" >添加车辆白名单</el-button>
+                </el-form-item>
+            </el-form>
+            <el-table
+                :data="whitelist"
+                border>
+                <el-table-column
+                    label="ID"
+                    min-width="50">
+                    <template slot-scope="scope">
+                        <p  v-if='scope.row.id' >{{scope.row.id}}</p>
+                        <p v-else>--</p>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="车牌类型"
+                    min-width="85">
+                    <template slot-scope="scope">
+                        <p v-if='scope.row.vehicle_type'>{{vehicleType(scope.row.vehicle_type)}}</p>
+                        <p v-else>--</p>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="车牌号码"
+                    min-width="75">
+                    <template slot-scope="scope">
+                        <p v-if='scope.row.plate_number'>{{scope.row.plate_number}}</p>
+                        <p v-else>--</p>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="操作"
+                    min-width='70'
+                    fixed="right">
+                    <template slot-scope="scope">
+                        <el-button type="text" @click="handleDeleteWhite(scope.$index, scope.row)" icon="el-icon-delete" title="删除" style="font-size:16px;"></el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="paging-wrapper" v-if='whitelist.length!==0'>
+                <el-pagination
+                @size-change="handleSizeChangeWhite"
+                @current-change="handleCurrentChangeWhite"
+                :current-page="pageStartWhite"
+                :page-sizes="[10, 20, 50]"
+                :page-size="pageSizeWhite"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="whitelist.length">
+                </el-pagination>
+            </div>
+        </div>
         <el-dialog 
             :title="title" 
             :visible.sync="dialogFormVisible"
@@ -143,6 +197,42 @@
                 <el-button type="primary" @click="onRegister" v-if="isRegister">创 建</el-button>
             </div>
         </el-dialog>
+        <el-dialog 
+            :title="titleWhite" 
+            :visible.sync="dialogWhiteVisible">
+            <el-row>
+                <el-form :model="formWhite" ref="loginWhiteForm">
+                    <el-form-item 
+                        label="车牌号" 
+                        :label-width="formLabelWidth"
+                        prop="plate_number">
+                        <el-input
+                            v-model="formWhite.plate_number" 
+                            class="w220"
+                            placeholder="请输入"></el-input>
+                    </el-form-item>
+                    <el-form-item 
+                        label="车牌类型" 
+                        :label-width="formLabelWidth">
+                        <el-select 
+                            class="w220"
+                            v-model="formWhite.region"
+                            clearable  
+                            placeholder="请选择车牌类型">
+                            <el-option
+                                v-for="(item, index) in optionsWhite"
+                                :key="index"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+            </el-row>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="onAddWhite">添加</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -194,6 +284,9 @@
     font-weight: normal;
     line-height: 28px;
 }
+.pt0{
+    padding-top:0;
+}
 </style>
 <style lang='less'>
 .demo-table .demo-table-expand .el-form-item label{
@@ -210,6 +303,8 @@ export default {
     },
     mounted : function(){
         this.getListData();
+        this.whitelistData();
+        this.setAdminMenu();
     },
     // beforeRouteLeave : function(to, from, next){
         
@@ -243,13 +338,20 @@ export default {
             loading : false,
             pageStart:1,
             pageSize:10,
+            pageStartWhite:1,
+            pageSizeWhite:10,
             tableData: [],
             userNum: 5,
             dialogFormVisible: false,
+            dialogWhiteVisible: false,
             form: {
                 username: '',
                 password: '',
                 region:['PERMIT_LIST','PERMIT_AGREE','PERMIT_REFUSE','PERMIT_DELETE'],
+            },
+            formWhite: {
+                plate_number: '',
+                region:[],
             },
             formLabelWidth: '120px',
             options: [{
@@ -268,7 +370,18 @@ export default {
                 value: 'GATE_CONTROLLER',
                 label: '卡口控制权限'
             }],
+            optionsWhite: [{
+                value: 'yellow',
+                label: '黄牌'
+                }, {
+                value: 'blue',
+                label: '蓝牌'
+                }, {
+                value: 'green',
+                label: '绿牌'
+                }],
             title:"创建用户",
+            titleWhite:"添加白名单",
             isRegister: false,
             isEdit: false,
             rules : {
@@ -279,6 +392,8 @@ export default {
 					{ required:true,validator : verifyPassWord, trigger: 'blur' }
 				]
             },
+            whitelist: [],
+            isWhite: false,
         })
     },
     methods : {
@@ -304,6 +419,19 @@ export default {
 
             });
         },
+        whitelistData(){
+            Api.gateWhitelist({
+                page: this.pageStartWhite,
+                size: this.pageSizeWhite,
+            }).then((response) =>{
+                if(response && response.status === 200){
+                    this.whitelist = response.data.whiteLists;
+                }
+            })
+            .catch(function (error) {
+
+            });
+        },
         handleSizeChange(value){
             // pageSize变化
             this.pageSize = value;
@@ -313,6 +441,16 @@ export default {
             // pageStart变化
             this.pageStart = value;
             this.getListData();
+        },
+        handleSizeChangeWhite(value){
+            // pageSize变化
+            this.pageSizeWhite = value;
+            this.whitelistData();
+        },
+        handleCurrentChangeWhite(value){
+            // pageStart变化
+            this.pageStartWhite = value;
+            this.whitelistData();
         },
         //删除用户
         handleDelete(index,row){
@@ -329,15 +467,49 @@ export default {
                     if(response && response.status === 200){
                         self.loading = false;
                         this.getListData();
+                    }else{
+                        self.loading = false;
                     }
                 })
                 .catch(function (error) {
+                    self.loading = false;
                 });
             }).catch(() => {
-                // this.$message({
-                //     type: 'info',
-                //     message: '已取消删除'
-                // });          
+                self.loading = false;
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
+        },
+        //删除白名单
+        handleDeleteWhite(index,row){
+            let self = this;
+            let id = this.whitelist[index].id;
+            // 点击删除确定
+            this.$confirm('是否删除该白名单?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                self.loading = true;
+                Api.deleteWhitelist(id).then((response) =>{    
+                    if(response && response.status === 200){
+                        self.loading = false;
+                        this.whitelistData();
+                    }else{
+                        self.loading = false;
+                    }
+                })
+                .catch(function (error) {
+                    self.loading = false;
+                });
+            }).catch(() => {
+                self.loading = false;
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
             });
         },
         //关闭弹框
@@ -359,6 +531,26 @@ export default {
                 this.dialogFormVisible = true;
                 this.isRegister = true;
             }
+        },
+        addWhite(){
+            this.formWhite.plate_number = "";
+            this.formWhite.region = [];
+            this.dialogWhiteVisible = true;
+        },
+        //添加白名单
+        onAddWhite(){
+            Api.addWhitelist({
+                plate_number: this.formWhite.plate_number.trim(),
+                vehicle_type: this.formWhite.region,
+            }).then((response) =>{
+                if(response && response.status === 200){
+                    this.whitelistData();
+                    this.dialogWhiteVisible = false;
+                }
+            })
+            .catch(function (error) {
+                this.dialogWhiteVisible = false;
+            });
         },
         //注册用户
         onRegister(){
@@ -423,6 +615,29 @@ export default {
                 this.dialogFormVisible = false;
             });
         },
+        //车牌类型
+        vehicleType(type){
+            switch (type) {
+                case "yellow":
+                return "黄牌";
+                break;
+                case "blue":
+                return "蓝牌";
+                break;
+                case "green":
+                return "绿牌";
+                break;
+                default:
+                break;
+            }
+        },
+        //判断是否有添加修改白名单的权限
+        setAdminMenu(){
+            let  authList = this.$store.state.authorities;
+            if(authList.indexOf('ADMIN') > -1 && authList.indexOf('GATE_CONTROLLER') > -1){
+                this.isWhite = true;
+            }
+        }
     },
     computed: {
         authorities(){

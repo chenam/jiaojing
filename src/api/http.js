@@ -84,6 +84,12 @@ service.interceptors.response.use(function(response){
                     type:'error',
                     duration: 4*1000 
                 })
+            }else{
+                Message({
+                    message:error.response.data.error_massage,
+                    type:'error',
+                    duration: 4*1000 
+                })
             }
         }
         
