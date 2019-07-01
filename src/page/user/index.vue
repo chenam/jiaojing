@@ -123,7 +123,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="paging-wrapper" v-if='whitelist.length!==0'>
+            <div class="paging-wrapper" v-if='totalNum!==0'>
                 <el-pagination
                 @size-change="handleSizeChangeWhite"
                 @current-change="handleCurrentChangeWhite"
@@ -131,7 +131,7 @@
                 :page-sizes="[10, 20, 50]"
                 :page-size="pageSizeWhite"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="whitelist.length">
+                :total="totalNum">
                 </el-pagination>
             </div>
         </div>
@@ -340,6 +340,7 @@ export default {
             pageSize:10,
             pageStartWhite:1,
             pageSizeWhite:10,
+            totalNum:0,
             tableData: [],
             userNum: 5,
             dialogFormVisible: false,
@@ -426,6 +427,7 @@ export default {
             }).then((response) =>{
                 if(response && response.status === 200){
                     this.whitelist = response.data.whiteLists;
+                    this.totalNum = response.data.total;
                 }
             })
             .catch(function (error) {
