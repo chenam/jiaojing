@@ -15,27 +15,28 @@
         <div class="examed">
              <el-form :inline="true" :model="examedForm" class="demo-form-inline" empty-text="暂无数据" :rules='examedFormRule' ref='examedForm'>
                 <el-form-item label="车牌号码：" prop='plateNumber'>
-                    <el-input v-model="examedForm.plateNumber" placeholder="请输入" clearable></el-input>
+                    <el-input v-model="examedForm.plateNumber" placeholder="请输入" clearable @keyup.native.enter='getListData'></el-input>
                 </el-form-item>
                 <el-form-item label="手机号:" prop='phone'>
-                    <el-input v-model="examedForm.phone" placeholder="手机号" clearable></el-input>
+                    <el-input v-model="examedForm.phone" placeholder="手机号" clearable @keyup.native.enter='getListData'></el-input>
                 </el-form-item>
                 <el-form-item label="审批意见:" prop="state">
-                    <el-select v-model="examedForm.state" placeholder="全部">
+                    <el-select v-model="examedForm.state" placeholder="全部" @change="getListData">
                         <el-option label="全部" value="FINISHED"></el-option>
                         <el-option label="通过" value="ACCEPTED"></el-option>
                         <el-option label="未通过" value="REFUSED"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="审批人:" prop='approver'>
-                    <el-input v-model="examedForm.approver" placeholder="请输入" clearable></el-input>
+                    <el-input v-model="examedForm.approver" placeholder="请输入" clearable @keyup.native.enter='getListData'></el-input>
                 </el-form-item>
                 <el-form-item label="通行证编号:" prop='permit_number'>
-                    <el-input v-model="examedForm.permit_number" placeholder="请输入" clearable></el-input>
+                    <el-input v-model="examedForm.permit_number" placeholder="请输入" clearable @keyup.native.enter='getListData'></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="onSubmit">查询</el-button>
                     <el-button  class='el-button-reset' @click="onCancel">重置</el-button>
+                    <el-button type="primary" @click="onExport">导出审批日志</el-button>
                     <!-- <el-button  class='el-button-reset' @click="onExport">导出</el-button> -->
                 </el-form-item>
             </el-form>
@@ -198,7 +199,7 @@
                             </router-link>
                             <router-link 
                                 v-if='scope.row.state !== "REFUSED"' 
-                                :to='{path:"/permit",query:{id:scope.row.id,plate_number:scope.row.plate_number,permit_number:scope.row.permit_number,phone:scope.row.phone}}'
+                                :to='{path:"/permit",query:{id:scope.row.id,plate_number:scope.row.plate_number,permit_number:scope.row.permit_number,phone:scope.row.phone,state:scope.row.state}}'
                                 class="table-action mr10">
                                 <i class="iconfont iconcheliangtonghangzheng" title="查看电子通行证" style="font-size:18px;"></i>
                             </router-link>
@@ -226,12 +227,13 @@
             </div>
         </div>
         <el-dialog 
+            class="grid-body"
             :title="title" 
             :visible.sync="dialogFormVisible"
             width="30%"
             @closed="handleClose">
             <el-row>
-                <el-form :model="form" ref="loginForm">
+                <el-form :model="form" ref="loginForm" label-width="100px">
                     <el-form-item 
                         label="撤销理由">
                         <el-select v-model="form.remarks" placeholder="无" class="w220">
@@ -243,11 +245,41 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="自定义理由">
+                        <el-input 
+                            class="w220" 
+                            v-model="form.remarks_auto" 
+                            placeholder="自定义意见" 
+                            clearable>
+                        </el-input>
+                    </el-form-item>
                 </el-form>
             </el-row>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onSubmitdialog">确 定</el-button>
                 <el-button @click="onCanceldialog">取消</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog 
+            :title="titleExport" 
+            :visible.sync="dialogFormExportVisible"
+            width="30%"
+            @closed="handleClose">
+            <el-row>
+                <el-form :model="form" ref="loginExportForm">
+                    <el-form-item 
+                        label="选择批复时间">
+                        <el-date-picker
+                            v-model="form.date"
+                            type="date"
+                            placeholder="选择日期">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-form>
+            </el-row>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="onExportdialog">确 定</el-button>
+                <el-button @click="onCancelExportdialog">取消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -284,6 +316,18 @@
 }
 a:hover{text-decoration: none;}
 </style>
+<style lang="less">
+.grid-body{
+    div.w220{
+        width: 240px!important;
+    }
+    div.w110{
+        width: 118px!important;
+        margin-bottom: 10px;
+    }
+}
+</style>
+
 
 <script>
 import Api  from '../../api/index.js';
@@ -377,8 +421,12 @@ export default {
             options: [],
             form:{
                 remarks: '无',
+                date:'',
+                remarks_auto:'',
             },
             permitsId:'',
+            titleExport:'导出审批日志',
+            dialogFormExportVisible: false,
         })
     },
     methods : {
@@ -495,14 +543,20 @@ export default {
         },
         //撤销通行证
         onSubmitdialog (){
-            let params = {approval_opinion: this.form.remarks};
+            let remarksAll = '';
+            if(this.form.remarks_auto != ''){
+                remarksAll = this.form.remarks + '。' + this.form.remarks_auto
+            }else{
+                remarksAll = this.form.remarks
+            }
+            let params = {approval_opinion: remarksAll};
             Api.cancelPermits(params,this.permitsId)
             .then((response) =>{
                 if(response && response.status === 200){
                     this.getListData();
                     this.dialogFormVisible = false;
                     this.form.remarks = '无';
-
+                    this.form.remarks_auto = '';
                 }
             })
             .catch(function (error) {
@@ -608,22 +662,80 @@ export default {
         onExport(){
             // 导出
             const self = this;
-
-            if(!this.examedForm.orgCode && this.isProfessor){
-                this.$message({
-                    message: '请选择机构',
-                    type: 'warning'
+            this.dialogFormExportVisible = true;
+            // if(!this.examedForm.orgCode && this.isProfessor){
+            //     this.$message({
+            //         message: '请选择机构',
+            //         type: 'warning'
+            //     });
+            // }else{
+            //     let orgCode = '';
+            //     // 所属机构处理
+            //     if(this.isProfessor){
+            //         orgCode = this.examedForm.orgCode;
+            //     }else{
+            //         orgCode = this.belongOrg;
+            //     };
+            //     window.open(`/literature/exportBookInfoByOrg?titleName=${self.examedForm.titleName}&orgCode=${orgCode}&fileType=${self.totalSearchForm.fileType}`);
+            // };
+        },
+        //确定导出审批日志
+        onExportdialog(){
+            const self = this;
+            let params = {approve_time: this.formatDate('YY-MM-dd',this.form.date)};
+            if(this.form.date){
+                Api.exportExcel(params)
+                .then((response) =>{
+                    if(response && response.status === 200){
+                        window.open(`/v1.0/management/excel?approve_time=${this.formatDate('YY-MM-dd',this.form.date)}`);
+                        this.dialogFormExportVisible = false;
+                        this.form.date = '';
+                    }
+                })
+                .catch(function (error) {
+                    this.dialogFormExportVisible = false;
                 });
             }else{
-                let orgCode = '';
-                // 所属机构处理
-                if(this.isProfessor){
-                    orgCode = this.examedForm.orgCode;
-                }else{
-                    orgCode = this.belongOrg;
-                };
-                window.open(`/literature/exportBookInfoByOrg?titleName=${self.examedForm.titleName}&orgCode=${orgCode}&fileType=${self.totalSearchForm.fileType}`);
+                this.$message({
+                    message: '请选择批复时间',
+                    type: 'warning'
+                });
+            }
+        },
+        //取消导出日志
+        onCancelExportdialog(){
+            this.dialogFormExportVisible = false;
+            this.form.date = '';
+        },
+        formatDate(fmt, mydate) {
+            if (!mydate) return "";
+            var mydate = new Date(mydate);
+            var o = {
+                "Y+": mydate.getFullYear(),
+                "M+": mydate.getMonth() + 1, //月份
+                "d+": mydate.getDate(), //日
+                "h+": mydate.getHours(), //小时
+                "m+": mydate.getMinutes(), //分
+                "s+": mydate.getSeconds(), //秒
+                "q+": Math.floor((mydate.getMonth() + 3) / 3), //季度
+                S: mydate.getMilliseconds() //毫秒
             };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1);
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    //
+                    if (k == "Y+") {
+                        fmt = fmt.replace(RegExp.$1, o[k]);
+                    }
+                    fmt = fmt.replace(
+                        RegExp.$1,
+                        RegExp.$1.length == 1
+                            ? o[k]
+                            : ("00" + o[k]).substr(("" + o[k]).length)
+                    );
+                }
+            }
+            return fmt;
         },
     }
 }

@@ -144,6 +144,14 @@
                                             </el-option>
                                         </el-select>
                                     </el-form-item>
+                                    <el-form-item label="自定义意见" prop="remarks_auto">
+                                        <el-input 
+                                            class="w220" 
+                                            v-model="form.remarks_auto" 
+                                            placeholder="自定义意见" 
+                                            clearable>
+                                        </el-input>
+                                    </el-form-item>
                                     <el-form-item label="途经时间起" prop="start_time">
                                         <!-- <el-date-picker
                                             class="w220"
@@ -270,7 +278,7 @@
                                         </div>
                                     </el-form-item>
                                     <el-form-item label="途径路线">
-                                        <el-input type="textarea" v-model="form.desc" ></el-input>
+                                        <el-input class= "textarea" type="textarea" v-model="form.desc"></el-input>
                                     </el-form-item>
                                     <el-form-item>
                                         <el-button type="primary" @click="onSubmit">确定</el-button>
@@ -311,7 +319,7 @@ export default {
                     startTime: '',
                     endTime: ''
                 }],
-                
+                remarks_auto:'',
                 // default_limit_time: [ new Date(0, 0), new Date(0, 0)]
             },
             formRule: {
@@ -372,22 +380,27 @@ export default {
                         if(!isPass){
                             return;
                         }
-                        
+                        let remarksAll = '';
+                        if(this.form.remarks_auto != ''){
+                            remarksAll = this.form.remarks + '。' + this.form.remarks_auto
+                        }else{
+                            remarksAll = this.form.remarks
+                        }
                         let params = {
                             state: this.form.state,
                             route: this.form.desc,
-                            approval_opinion: this.form.remarks,
+                            approval_opinion: remarksAll,
                             start_time: new Date(this.form.start_time).valueOf(),
                             end_time: new Date(this.form.end_time).valueOf(),
                             gate: this.form.gates.join(','),
                             peak_hour: this.form.peak_time,
                             limit_time: _limit_time.join(','),
                         }
-                        // console.log(params,'params')
+                        //console.log(params,'params')
                         Api.approvalPermits(params,this.$route.query.id)
                         .then((response) =>{
                             if(response && response.status === 200){
-                                this.$router.push({path: "/unexam"});
+                                this.$router.push({path: "/unexam",query:{pagesign:this.$route.query.pagesign}});
                             }else{
 
                             }            
@@ -402,7 +415,7 @@ export default {
                 
                 });
             }else{
-                this.$router.push({path: "/unexam"});
+                this.$router.push({path: "/unexam",query:{pagesign:this.$route.query.pagesign}});
             }
         },
         imgUrl(url){

@@ -2,7 +2,7 @@
   <div class="permit">
         <div class="main">
             <el-row v-loading="loading">
-                <el-col :span="24">
+                <el-col :span="24" :class="{bgGray:isExpired}">
                     <div class="grid-content bg-purple">
                         <div class="grid-header">
                             <h3 class="title">电子通行证</h3>
@@ -68,7 +68,12 @@
                                     </tr>
                                     <tr>
                                         <th><div class="cell">二维码</div></th>
-                                        <td><div class="cell"><img :src="`${baseUrl}`+ tableData.qr_path"></div></td>
+                                        <td>
+                                            <div class="cell">
+                                                <img :src="`${baseUrl}`+ tableData.qr_path">
+                                                <i v-if="isExpired" class="iconfont iconyiguoqi floatR" title="过期" style="font-size:100px;"></i>
+                                            </div>
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
@@ -91,6 +96,7 @@ export default {
             tableData: [],
             baseUrl: process.env.API_URL ? process.env.API_URL : '',
             loading: true,
+            isExpired:false,
         };
     },
     props: {
@@ -139,6 +145,11 @@ export default {
         })
         .catch(function (error) {
         });
+        if(this.$route.query.state == "EXPIRED"){
+            this.isExpired=true;
+        }else{
+            this.isExpired=false;
+        }
     },
     destroyed() {},
     beforeDestroy() {}
@@ -155,6 +166,9 @@ export default {
 }
 .el-col{
     background: #409EFF;
+    &.bgGray{
+        background: #ccc;
+    }
 }
 .el-table tr:nth-child(2n+1) th,.el-table tr:nth-child(2n+1) td{
     background: #fafafa;
@@ -173,6 +187,11 @@ export default {
 .permitList{
     padding: 10px;
     background: #fff;
+}
+.floatR{
+    position: absolute;
+    bottom: 60px;
+    right: 10px;
 }
 @media (max-width: 768px){
     .main{

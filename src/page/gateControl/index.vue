@@ -13,7 +13,7 @@
         </div>
 
         <div class="gateControl">
-            <p class="form-notice red">注意：关闭卡口会导致卡口一直处于关闭状态，请谨慎操作。特殊情况解除后请及时打开。</p>
+            <p class="form-notice red">注意：锁定状态，只可以通过手持终端机手动开闸，请谨慎操作。特殊情况解除后请及时打开。</p>
             <div>
                 <el-table
                     :data="tableData"
@@ -47,7 +47,7 @@
                                 size="small"
                                 v-if="scope.row.status != 'CLOSED'"
                                 type="danger"
-                                @click="handleClose(scope.$index, scope.row)" class="table-action mr10"><i class="iconfont iconclose" title="关闭" style="font-size:17px;"></i></a>
+                                @click="handleClose(scope.$index, scope.row)" class="table-action mr10"><i class="iconfont iconclose" title="锁定" style="font-size:17px;"></i></a>
                             <a href="javascript:;"
                                 size="small"
                                 v-if="scope.row.status != 'NORMAL'"
@@ -160,10 +160,10 @@ export default {
                 return "正常";
                 break;
                 case "CLOSED":
-                return "关闭";
+                return "锁定";
                 break;
                 case "FAULT":
-                return "故障";
+                return "离线";
                 break;
                 default:
                 break;

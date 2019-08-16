@@ -11,10 +11,22 @@
             <div class="conditions">
                 <el-form :inline="true" :model="exportForm" class="demo-form-inline" empty-text="暂无数据" :rules='exportFormRule' ref='exportForm'>
                     <el-form-item label="车牌号码:" prop='plateNumber'>
-                        <el-input v-model="exportForm.plateNumber" placeholder="车牌号码" clearable></el-input>
+                        <el-input v-model="exportForm.plateNumber" placeholder="车牌号码" clearable @keyup.native.enter='getListData'></el-input>
                     </el-form-item>
                     <el-form-item label="手机号:" prop='phone'>
-                        <el-input v-model="exportForm.phone" placeholder="手机号" clearable></el-input>
+                        <el-input v-model="exportForm.phone" placeholder="手机号" clearable @keyup.native.enter='getListData'></el-input>
+                    </el-form-item>
+                    <el-form-item label="出发地:" prop='from'>
+                        <el-input v-model="exportForm.from" placeholder="出发地" clearable @keyup.native.enter='getListData'></el-input>
+                    </el-form-item>
+                    <el-form-item label="目的地:" prop='arrivals'>
+                        <el-input v-model="exportForm.arrivals" placeholder="目的地" clearable @keyup.native.enter='getListData'></el-input>
+                    </el-form-item>
+                    <el-form-item label="行驶路线:" prop='route'>
+                        <el-input v-model="exportForm.route" placeholder="行驶路线" clearable @keyup.native.enter='getListData'></el-input>
+                    </el-form-item>
+                    <el-form-item label="货物:" prop='goods'>
+                        <el-input v-model="exportForm.goods" placeholder="货物" clearable @keyup.native.enter='getListData'></el-input>
                     </el-form-item>
                     <!-- <el-form-item label="通行证状态">
                         <el-select v-model="formInline.state" placeholder="未审批">
@@ -127,7 +139,7 @@
                         fixed="right"
                         v-if="isApproval">
                         <template slot-scope="scope">
-                            <router-link :to='{path:"/details",query:{id:scope.row.id,state:"APPLYING",breadcrumbitem:"通行证审批"}}'
+                            <router-link :to='{path:"/details",query:{id:scope.row.id,pagesign: page,state:"APPLYING",breadcrumbitem:"通行证审批"}}'
                             class="table-action mr10"><i class="iconfont icontonghangzhengshenpi" title="审批" style="font-size:18px;"></i></router-link>
                             <!-- <el-button type="text" size="small" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
                             <a href="javascript:void(0);" v-if="isDelete" @click="handleDelete(scope.$index, scope.row)"><i class="el-icon-delete" title="删除" style="font-size:16px;"></i></a>
@@ -172,6 +184,10 @@ export default {
         exportForm: {
             plateNumber: '',
             phone: '',
+            from:'',
+            arrivals:'',
+            route:'',
+            goods:'',
         },
         exportFormRule:{
             plateNumber: [
@@ -179,6 +195,18 @@ export default {
             ],
             phone: [
                 { required: false, message: '请输入手机号', trigger: 'blur' },
+            ],
+            from: [
+                { required: false, message: '请输入出发地', trigger: 'blur' },
+            ],
+            arrivals: [
+                { required: false, message: '请输入目的地', trigger: 'blur' },
+            ],
+            route: [
+                { required: false, message: '请输入行驶路线', trigger: 'blur' },
+            ],
+            goods: [
+                { required: false, message: '请输入货物', trigger: 'blur' },
             ]
         },
         isApproval: true,
@@ -195,6 +223,10 @@ export default {
                 state: "APPLYING",
                 plate_number: this.exportForm.plateNumber,
                 phone: this.exportForm.phone,
+                from:this.exportForm.from,
+                arrivals:this.exportForm.arrivals,
+                route:this.exportForm.route,
+                goods:this.exportForm.goods,
                 order_by: this.order_by,
                 sort: this.sort,
             });
@@ -257,6 +289,11 @@ export default {
                 this.sort = 1;
             }
             this.getListData();
+        },
+        setPage(){
+            if(this.$route.query.pagesign){
+                this.page = Number(this.$route.query.pagesign);
+            }
         }
   },
   computed: {
@@ -277,6 +314,14 @@ export default {
                 return this.permitsList.length;
             }
         },
+  },
+  beforeRouteEnter (to, from, next) {
+        if(from.path === "/details") {
+            to.query.pagesign = from.query.pagesign
+        }else{
+            to.query.pagesign = 1;
+        }
+        next()
   },
   beforeCreate() {},
   created() {},
@@ -301,6 +346,7 @@ export default {
         // })
         // .catch(function (error) {
         // });
+        this.setPage();
         this.getListData();
         // 判断是否有通行政审批权限
 		let  authList = this.$store.state.authorities;

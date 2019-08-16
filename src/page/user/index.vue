@@ -47,6 +47,9 @@
                                 <el-form-item label="通行证删除权限">
                                     <span>{{ scope.row.role.permit_delete == "0"?"无":"有" }}</span>
                                 </el-form-item>
+                                <el-form-item label="卡口管理控制权限">
+                                  <span>{{ scope.row.role.gate_controller == "0"?"无":"有" }}</span>
+                                </el-form-item>
                             </el-form>
                         </template>
                     </el-table-column>
@@ -113,6 +116,14 @@
                         <p v-if='scope.row.plate_number'>{{scope.row.plate_number}}</p>
                         <p v-else>--</p>
                     </template>
+                </el-table-column>
+                <el-table-column
+                  label="允许卡口"
+                  min-width="75">
+                  <template slot-scope="scope">
+                    <p v-if='scope.row.org_name'>{{scope.row.org_name}}</p>
+                    <p v-else>--</p>
+                  </template>
                 </el-table-column>
                 <el-table-column
                     label="操作"

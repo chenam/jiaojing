@@ -42,7 +42,7 @@ export default{
     },
     //关卡
     gateNames(param,callbak){
-        return http.get(`${baseUrl}/v1.0/management/gate/group`, param, callbak)
+        return http.get(`${baseUrl}/v1.0/gate/orgdev/name`, param, callbak)
     },
     //用户列表
     accountLists(param,callbak){
@@ -70,11 +70,11 @@ export default{
     },
     //查看开闸记录
     passLog(param,callbak){
-        return http.get(`${baseUrl}/v1.0/management/gate/pass-log`, param, callbak)
+        return http.get(`${baseUrl}/v1.0/gate/pass-log`, param, callbak)
     },
     //查看卡口状态
     gateStatus(param,callbak){
-        return http.get(`${baseUrl}/v1.0/gate/status`, param, callbak)
+        return http.get(`${baseUrl}/v1.0/gate/orgdev/status`, param, callbak)
     },
     //关闭卡口
     gateClose(param,callbak){
@@ -99,6 +99,10 @@ export default{
     //删除白名单
     deleteWhitelist(id,callbak) {
         return http.delete(`${baseUrl}/v1.0/gate/whitelist/${id}`, callbak)
+    },
+    //导出审批日志
+    exportExcel(param,callbak){
+        return http.get(`${baseUrl}/v1.0/management/excel`, param, callbak)
     },
 }
 

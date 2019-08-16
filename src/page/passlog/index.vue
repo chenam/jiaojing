@@ -60,7 +60,7 @@
                     </el-table-column>
                     <el-table-column
                         label="开闸时间"
-                        min-width="110">
+                        min-width="80">
                         <template slot-scope="scope">
                             <p v-if='scope.row.pass_time'>{{scope.row.pass_time | date-format}}</p>
                             <p v-else>--</p>
@@ -84,6 +84,16 @@
                             </div>
                         </template>
                     </el-table-column>
+                  <el-table-column
+                    label="操作人员"
+                    min-width="90">
+                    <template slot-scope="scope">
+                      <div>
+                        <p v-if='scope.row.manager'>{{scope.row.manager}}</p>
+                        <p v-else>--</p>
+                      </div>
+                    </template>
+                  </el-table-column>
                     <el-table-column
                         label="车牌号码"
                         min-width="75">
